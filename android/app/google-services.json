@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945487010136",
+    "project_id": "geyserswitch-bloc",
+    "storage_bucket": "geyserswitch-bloc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945487010136:android:45be5f8f0faab7dc50ad2d",
+        "android_client_info": {
+          "package_name": "com.geyserswitch.gs_orange"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvhm9ZC2e_-o6KWSPqOlK7PxEhJoRucFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
