@@ -48,7 +48,7 @@ class DisplayCard extends StatelessWidget {
               shadowColor: getColor(),
               elevation: 5.5,
               color: Colors.white
-                  .withOpacity(0.7), //For color change use: getColor(),
+                  .withOpacity(0.6), //For color change use: getColor(),
               child: Row(
                 children: [
                   Expanded(

@@ -47,7 +47,7 @@ class _HomeButtonState extends State<HomeButton> {
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             isEnabled = !isEnabled;
           });
@@ -69,14 +69,14 @@ class _HomeButtonState extends State<HomeButton> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: isEnabled
-                ? Colours.primaryColour.withOpacity(.7)
+                ? Colours.primaryColour.withOpacity(.5)
                 : Colours.secondaryColour,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
                 color: isEnabled
                     ? Colours.primaryColour.withOpacity(.4)
-                    : Colors.grey.shade400,
+                    : Colors.grey.shade400.withOpacity(0.7),
                 spreadRadius: 2,
                 blurRadius: isEnabled ? 10 : 2,
               ),

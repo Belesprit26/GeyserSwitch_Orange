@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
 import 'package:gs_orange/core/res/colours.dart';
+import 'package:gs_orange/src/home/presentation/views/timers_view.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({Key? key}) : super(key: key);
@@ -33,15 +34,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   )),
               onTap: () => context.push(const Placeholder()),
             ),
+
             //Timers
             PopupMenuItem<void>(
               child: const PopupItem(
-                  title: "Off-Peak Timers",
+                  title: "Timer Automation",
                   icon: Icon(
                     Icons.watch_later_outlined,
                     color: Colours.neutralTextColour,
                   )),
-              onTap: () => context.push(const Placeholder()),
+              onTap: () => context.push(const TimersPage()),
             ),
             PopupMenuItem<void>(
               height: 1,
