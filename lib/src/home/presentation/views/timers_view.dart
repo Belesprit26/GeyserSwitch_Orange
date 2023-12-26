@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/gradient_background.dart';
 import 'package:gs_orange/core/res/media_res.dart';
 import 'package:gs_orange/src/home/presentation/refactors/timers_body.dart';
+import 'package:gs_orange/src/home/presentation/refactors/timers_header.dart';
 import 'package:gs_orange/src/home/presentation/widgets/timers_appbar.dart';
 
 class TimersPage extends StatelessWidget {
@@ -18,8 +19,9 @@ class TimersPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
+            TimersHeader(),
             SizedBox(
-              height: 30,
+              height: 42,
             ),
             TimersBody(),
             SizedBox(

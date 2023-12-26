@@ -96,6 +96,7 @@ class _TimersBodyState extends State<TimersBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        //Morning Birds
         Container(
           height: 180,
           width: 400,
@@ -147,8 +148,8 @@ class _TimersBodyState extends State<TimersBody> {
                     },
                     child: AnimatedContainer(
                       duration: animationDuration,
-                      height: 40,
-                      width: 70,
+                      height: 30,
+                      width: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: is2AM
@@ -173,8 +174,8 @@ class _TimersBodyState extends State<TimersBody> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
@@ -210,8 +211,8 @@ class _TimersBodyState extends State<TimersBody> {
                     },
                     child: AnimatedContainer(
                       duration: animationDuration,
-                      height: 40,
-                      width: 70,
+                      height: 30,
+                      width: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: is4AM
@@ -236,8 +237,8 @@ class _TimersBodyState extends State<TimersBody> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
@@ -273,8 +274,8 @@ class _TimersBodyState extends State<TimersBody> {
                     },
                     child: AnimatedContainer(
                       duration: animationDuration,
-                      height: 40,
-                      width: 70,
+                      height: 30,
+                      width: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: is6AM
@@ -299,8 +300,8 @@ class _TimersBodyState extends State<TimersBody> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
@@ -316,8 +317,9 @@ class _TimersBodyState extends State<TimersBody> {
           ),
         ),
         SizedBox(
-          height: 65,
+          height: 45,
         ),
+        //Evening Owls
         Container(
           height: 180,
           width: 300,

@@ -47,7 +47,7 @@ class ProfileBody extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Row(
+            /*Row(
               children: [
                 Expanded(
                   child: UserInfoCard(
@@ -75,7 +75,7 @@ class ProfileBody extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ),*/
             const SizedBox(height: 30),
             Center(
               child: Column(
