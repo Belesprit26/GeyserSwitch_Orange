@@ -10,15 +10,17 @@ class TimersHeader extends StatelessWidget {
     return Consumer<UserProvider>(builder: (_, provider, __) {
       final user = provider.user;
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             height: 10,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Please note ${user!.fullName.split(' ').first}:' ??
-                    'Good Morning',
+                    'Please note',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
               ),
@@ -32,10 +34,10 @@ class TimersHeader extends StatelessWidget {
             children: [
               Text(
                 "All timers run automatically\n"
-                "and are set to Eskom's Off-Peak \n"
-                "hours to maximize savings.",
+                "and are set to Eskom's Off \n"
+                "-Peak hours to maximize \nsavings.",
                 textAlign: TextAlign.start,
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.5),
               ),
             ],
           )

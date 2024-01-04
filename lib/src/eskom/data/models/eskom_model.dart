@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:gs_orange/core/utils/typdefs.dart';
-import 'package:gs_orange/src/auth/domain/entities/eskom.dart';
+import 'package:gs_orange/src/eskom/domain/entities/eskom.dart';
 
 class EskomModel extends Eskom {
   const EskomModel({
@@ -30,4 +30,12 @@ class EskomModel extends Eskom {
           stage: map['status']['eskom']['stage'] as String,
           stageUpdated: map['status']['eskom']['stage_updated'] as String,
         );
+
+  DataMap toMap() => {
+        'name': name,
+        'stage': stage,
+        'stageUpdated': stageUpdated,
+      };
+
+  String toJson() => jsonEncode(toMap());
 }

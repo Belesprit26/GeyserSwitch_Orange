@@ -1,0 +1,19 @@
+{
+  "status": {
+    "eskom": {
+      "name": "_empty.name",
+      "next_stages": [
+        {
+          "stage": "2",
+          "stage_start_timestamp": "2022-08-08T16:00:00+02:00"
+        },
+        {
+          "stage": "0",
+          "stage_start_timestamp": "2022-08-09T00:00:00+02:00"
+        }
+      ],
+      "stage": "_empty.stage",
+      "stage_updated": "_empty.update"
+    }
+  }
+}

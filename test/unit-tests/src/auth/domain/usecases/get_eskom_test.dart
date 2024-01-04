@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gs_orange/src/auth/domain/entities/eskom.dart';
-import 'package:gs_orange/src/auth/domain/repos/eskom_repo.dart';
-import 'package:gs_orange/src/auth/domain/usecases/get_eskom.dart';
+import 'package:gs_orange/src/eskom/domain/entities/eskom.dart';
+import 'package:gs_orange/src/eskom/domain/repos/eskom_repo.dart';
+import 'package:gs_orange/src/eskom/domain/usecases/get_eskom.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthRepo extends Mock implements EskomAuthRepo {}

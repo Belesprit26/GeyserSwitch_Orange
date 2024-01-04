@@ -98,8 +98,8 @@ class _TimersBodyState extends State<TimersBody> {
       children: [
         //Morning Birds
         Container(
-          height: 180,
-          width: 400,
+          height: 150,
+          width: 360,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: Colours.secondaryColour,
@@ -120,7 +120,7 @@ class _TimersBodyState extends State<TimersBody> {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
               ),
               SizedBox(
-                height: 40,
+                height: 36,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 //2am
@@ -317,11 +317,11 @@ class _TimersBodyState extends State<TimersBody> {
           ),
         ),
         SizedBox(
-          height: 45,
+          height: 36,
         ),
         //Evening Owls
         Container(
-          height: 180,
+          height: 150,
           width: 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -343,7 +343,7 @@ class _TimersBodyState extends State<TimersBody> {
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
               ),
               SizedBox(
-                height: 40,
+                height: 30,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 //3pm
@@ -371,8 +371,8 @@ class _TimersBodyState extends State<TimersBody> {
                     },
                     child: AnimatedContainer(
                       duration: animationDuration,
-                      height: 40,
-                      width: 70,
+                      height: 30,
+                      width: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: is3PM
@@ -397,8 +397,8 @@ class _TimersBodyState extends State<TimersBody> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
@@ -434,8 +434,8 @@ class _TimersBodyState extends State<TimersBody> {
                     },
                     child: AnimatedContainer(
                       duration: animationDuration,
-                      height: 40,
-                      width: 70,
+                      height: 30,
+                      width: 60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: is5PM
@@ -460,8 +460,8 @@ class _TimersBodyState extends State<TimersBody> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
-                            width: 30,
-                            height: 30,
+                            width: 24,
+                            height: 24,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
