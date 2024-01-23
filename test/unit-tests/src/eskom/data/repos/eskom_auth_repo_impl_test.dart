@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/errors/failures.dart';
-import 'package:gs_orange/src/eskom/data/datasources/eskmo_auth_remote_data_source.dart';
+import 'package:gs_orange/src/eskom/data/datasources/eskom_auth_remote_data_source.dart';
 import 'package:gs_orange/src/eskom/data/repos/eskom_auth_repo_impl.dart';
 import 'package:gs_orange/src/eskom/domain/entities/eskom.dart';
 import 'package:mocktail/mocktail.dart';

@@ -35,3 +35,7 @@ class ApiFailure extends Failure {
   ApiFailure.fromException(APIException exception)
       : this(message: exception.message, statusCode: exception.statusCode);
 }
+
+class ConnectionFailure extends Failure {
+  ConnectionFailure({required super.message, required super.statusCode});
+}

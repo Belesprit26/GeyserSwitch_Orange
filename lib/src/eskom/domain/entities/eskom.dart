@@ -1,4 +1,6 @@
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:gs_orange/core/utils/constants.dart';
 
 class Eskom extends Equatable {
   const Eskom({
@@ -9,9 +11,9 @@ class Eskom extends Equatable {
 
   const Eskom.empty()
       : this(
-          name: "_empty.name",
+          name: "National",
           stage: "_empty.stage",
-          stageUpdated: "_empty.update",
+          stageUpdated: "_empty.updated",
         );
 
   final String? name;
@@ -21,3 +23,25 @@ class Eskom extends Equatable {
   @override
   List<Object?> get props => [name];
 }
+
+class Status extends Equatable {
+  const Status({
+    required this.eskom,
+  });
+  final Eskom? eskom;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [eskom];
+}
+/*
+class LoadShedding extends Equatable {
+  const LoadShedding({
+    required this.status,
+  });
+
+  final Status? status;
+
+  @override
+  List<Object?> get props => [status];
+}*/

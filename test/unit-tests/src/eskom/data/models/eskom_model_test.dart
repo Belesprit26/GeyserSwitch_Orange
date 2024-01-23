@@ -34,6 +34,7 @@ void main() {
     test('should return [EskomModel] withe the right data', () {
       //Act
       final result = EskomModel.fromJson(tJson);
+      print(tJson);
       expect(result, equals(tModel));
     });
   });

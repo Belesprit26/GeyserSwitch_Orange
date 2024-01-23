@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/errors/failures.dart';
 import 'package:gs_orange/core/utils/typdefs.dart';
-import 'package:gs_orange/src/eskom/data/datasources/eskmo_auth_remote_data_source.dart';
+import 'package:gs_orange/src/eskom/data/datasources/eskom_auth_remote_data_source.dart';
 import 'package:gs_orange/src/eskom/domain/entities/eskom.dart';
 import 'package:gs_orange/src/eskom/domain/repos/eskom_repo.dart';
 

@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/utils/constants.dart';
-import 'package:gs_orange/src/eskom/data/datasources/eskmo_auth_remote_data_source.dart';
+import 'package:gs_orange/core/utils/typdefs.dart';
+import 'package:gs_orange/src/eskom/data/datasources/eskom_auth_remote_data_source.dart';
 import 'package:gs_orange/src/eskom/data/models/eskom_model.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:http/http.dart' as http;
@@ -36,10 +39,33 @@ void main() {
 
         verify(() => client.get(
               Uri.https(kBaseUrl, kGetEskomEndpoint),
-              /*headers: {'token': kToken},*/
             )).called(1);
         verifyNoMoreInteractions(client);
       },
     );
+    test('should throw [APIException] when the status code is 500', () async {
+      final tMessage = 'Server down';
+
+      when(() => client.get(any())).thenAnswer(
+        (_) async => http.Response(
+          tMessage,
+          500,
+        ),
+      );
+
+      final methodCall = remoteDataSource.getEskom();
+
+      expect(
+        () => methodCall,
+        throwsA(
+          APIException(message: tMessage, statusCode: 500),
+        ),
+      );
+
+      verify(() => client.get(
+            Uri.https(kBaseUrl, kGetEskomEndpoint),
+          )).called(1);
+      verifyNoMoreInteractions(client);
+    });
   });
 }

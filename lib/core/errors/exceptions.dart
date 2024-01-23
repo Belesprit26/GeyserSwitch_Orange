@@ -30,3 +30,5 @@ class APIException extends Equatable implements Exception {
   @override
   List<dynamic> get props => [message, statusCode];
 }
+
+class ServersException implements Exception {}
