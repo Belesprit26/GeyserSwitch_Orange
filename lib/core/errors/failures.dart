@@ -39,3 +39,24 @@ class ApiFailure extends Failure {
 class ConnectionFailure extends Failure {
   ConnectionFailure({required super.message, required super.statusCode});
 }
+
+//2nd
+abstract class Failures extends Equatable {
+  final String message;
+  const Failures(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class ServersFailure extends Failures {
+  const ServersFailure(String message) : super(message);
+}
+
+class ConnectionsFailure extends Failures {
+  const ConnectionsFailure(String message) : super(message);
+}
+
+class DatabasesFailure extends Failures {
+  const DatabasesFailure(String message) : super(message);
+}

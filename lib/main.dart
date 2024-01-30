@@ -1,3 +1,4 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/res/fonts.dart';
@@ -8,9 +9,11 @@ import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_control
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/src/loadshedding/presentation/bloc/loadshedding_bloc.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  setupSL();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     name: "GeyserSwitch Orange",
@@ -30,6 +33,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DashboardController()),
+        BlocProvider(create: (_) => sl<LoadSheddingBloc>()),
       ],
       child: MaterialApp(
         title: 'GeyserSwitch Orange',

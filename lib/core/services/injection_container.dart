@@ -7,6 +7,11 @@ import 'package:gs_orange/src/auth/domain/usecases/sign_in.dart';
 import 'package:gs_orange/src/auth/domain/usecases/sign_up.dart';
 import 'package:gs_orange/src/auth/domain/usecases/update_user.dart';
 import 'package:gs_orange/src/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gs_orange/src/loadshedding/data/data_sources/remote_data_source.dart';
+import 'package:gs_orange/src/loadshedding/data/repository/loadshedding_repository_implementation.dart';
+import 'package:gs_orange/src/loadshedding/domain/repository/loadshedding_repository.dart';
+import 'package:gs_orange/src/loadshedding/domain/usecases/get_current_stage.dart';
+import 'package:gs_orange/src/loadshedding/presentation/bloc/loadshedding_bloc.dart';
 import 'package:gs_orange/src/on_boarding/data/datasources/on_boarding_local_data_source.dart';
 import 'package:gs_orange/src/on_boarding/data/repos/on_boarding_repo_impl.dart';
 import 'package:gs_orange/src/on_boarding/domain/repos/on_boarding_repo.dart';
@@ -17,5 +22,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 part 'injection_container.main.dart';

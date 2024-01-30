@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/utils/constants.dart';
@@ -16,13 +17,49 @@ class LoadSheddingRemoteDataSourceImpl extends LoadSheddingRemoteDataSource {
 
   @override
   Future<LoadSheddingModel> getCurrentStage(String cityName) async {
-    final response =
-        await client.get(Uri.parse(Urls.currentStageByName(cityName)));
+    Map<String, String> headers = {
+      'token': kToken,
+      'contentType': 'application/json;charset=UTF-8',
+      'Charset': 'utf-8'
+    };
 
+    var request = http.Request(
+        'GET', Uri.parse('https://developer.sepush.co.za/business/2.0/status'));
+    var request2 = http.Request('GET',
+        Uri.parse('https://developer.sepush.co.za/business/2.0/api_allowance'));
+
+    request.headers.addAll(headers);
+    request2.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    http.StreamedResponse response2 = await request2.send();
+
+    var data;
     if (response.statusCode == 200) {
-      return LoadSheddingModel.fromJson(json.decode(response.body));
+      await response.stream.bytesToString().then((value) {
+        print(value);
+        data = value;
+      });
+      await response2.stream.bytesToString().then((allowance) {
+        print(allowance);
+      });
+      return LoadSheddingModel.fromJson(json.decode(data));
+    } else {
+      print(response.reasonPhrase);
+      throw ServersException();
+    }
+    if (response.statusCode == 200) {
+      return LoadSheddingModel.fromJson(
+          json.decode(json.encode(response.stream.toString())));
     } else {
       throw ServersException();
     }
+/*return LoadSheddingModel.fromJson(
+          json.decode(json.encode(response.stream.toString())));*/
+    ///////////////////////////
+
+    final jresponse = await client
+        .get(Uri.parse(Urls.currentStageByName(cityName)), headers: headers);
+
+    // var data = await json.decode(json.encode(response.body));
   }
 }

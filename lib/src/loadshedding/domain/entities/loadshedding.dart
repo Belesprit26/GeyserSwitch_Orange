@@ -7,13 +7,6 @@ class LoadSheddingEntity extends Equatable {
     required this.stageUpdated,
   });
 
-  const LoadSheddingEntity.empty()
-      : this(
-          cityName: "National",
-          stage: "_empty.stage",
-          stageUpdated: "_empty.updated",
-        );
-
   final String? cityName;
   final String? stage;
   final String? stageUpdated;

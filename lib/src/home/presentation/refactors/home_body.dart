@@ -12,11 +12,14 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (_, provider, __) {
       final user = provider.user;
-      return DisplayCard(
-        value: user!.temperature.toDouble(),
-        name: 'Temperature',
-        unit: ' °C',
-        assetImage: AssetImage('assets/images/temperature_icon.png'),
+      return GestureDetector(
+        child: DisplayCard(
+          value: user!.temperature.toDouble(),
+          name: 'Temperature',
+          unit: ' °C',
+          assetImage: AssetImage('assets/images/temperature_icon.png'),
+        ),
+        onTap: () {},
       );
     });
   }

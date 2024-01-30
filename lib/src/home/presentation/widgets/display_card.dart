@@ -33,20 +33,20 @@ class DisplayCard extends StatelessWidget {
     }
 
     return Container(
-      height: 205,
+      height: 180,
       alignment: Alignment.center,
       child: ClipRRect(
         child: BackdropFilter(
           filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
           child: SizedBox(
-            width: 200,
-            height: 200,
+            width: 180,
+            height: 180,
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ),
               shadowColor: getColor(),
-              elevation: 5.5,
+              elevation: 3,
               color: Colors.white
                   .withOpacity(0.6), //For color change use: getColor(),
               child: Row(

@@ -7,6 +7,25 @@ Future<void> init() async {
   await _initAuth();
 }
 
+void setupSL() {
+  //bloc
+  sl.registerFactory(() => LoadSheddingBloc(sl()));
+
+  //usecase
+  sl.registerLazySingleton(() => GetCurrentStageUsecase(sl()));
+
+  //repository
+  sl.registerLazySingleton<LoadSheddingRepository>(
+      () => LoadSheddingRepositoryImpl(loadSheddingRemoteDataSource: sl()));
+
+  //datasource
+  sl.registerLazySingleton<LoadSheddingRemoteDataSource>(
+      () => LoadSheddingRemoteDataSourceImpl(client: sl()));
+
+  //external
+  sl.registerLazySingleton(() => http.Client());
+}
+
 Future<void> _initAuth() async {
   sl
     ..registerFactory(

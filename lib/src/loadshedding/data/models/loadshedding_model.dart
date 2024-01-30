@@ -2,9 +2,9 @@ import 'package:gs_orange/src/loadshedding/domain/entities/loadshedding.dart';
 
 class LoadSheddingModel extends LoadSheddingEntity {
   const LoadSheddingModel({
-    required String? cityName,
-    required String? stage,
-    required String? stageUpdated,
+    required String cityName,
+    required String stage,
+    required String stageUpdated,
   }) : super(
           cityName: cityName,
           stage: stage,
@@ -31,4 +31,10 @@ class LoadSheddingModel extends LoadSheddingEntity {
           },
         ],
       };
+
+  LoadSheddingEntity toEntity() => LoadSheddingEntity(
+        cityName: cityName,
+        stage: stage,
+        stageUpdated: stageUpdated,
+      );
 }

@@ -61,7 +61,8 @@ class _DashboardState extends State<Dashboard> {
                     label: 'Home',
                     backgroundColor: Colors.white,
                   ),
-                  BottomNavigationBarItem(
+                  //Eskom Feature
+                  /*BottomNavigationBarItem(
                     icon: Icon(
                       controller.currentIndex == 1
                           ? IconlyBold.document
@@ -72,13 +73,13 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     label: 'Materials',
                     backgroundColor: Colors.white,
-                  ),
+                  ),*/
                   BottomNavigationBarItem(
                     icon: Icon(
-                      controller.currentIndex == 2
+                      controller.currentIndex == 1
                           ? IconlyBold.chat
                           : IconlyLight.chat,
-                      color: controller.currentIndex == 2
+                      color: controller.currentIndex == 1
                           ? Colours.primaryColour
                           : Colors.grey,
                     ),
@@ -87,10 +88,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(
-                      controller.currentIndex == 3
+                      controller.currentIndex == 2
                           ? IconlyBold.profile
                           : IconlyLight.profile,
-                      color: controller.currentIndex == 3
+                      color: controller.currentIndex == 2
                           ? Colours.primaryColour
                           : Colors.grey,
                     ),
