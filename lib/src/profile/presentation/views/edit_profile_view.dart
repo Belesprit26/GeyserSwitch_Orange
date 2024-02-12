@@ -159,9 +159,9 @@ class _EditProfileViewState extends State<EditProfileView> {
                     : StatefulBuilder(
                         builder: (_, refresh) {
                           fullNameController.addListener(() => refresh(() {}));
+                          bioController.addListener(() => refresh(() {}));
                           emailController.addListener(() => refresh(() {}));
                           passwordController.addListener(() => refresh(() {}));
-                          bioController.addListener(() => refresh(() {}));
                           return Text(
                             'Done',
                             style: TextStyle(
@@ -237,10 +237,10 @@ class _EditProfileViewState extends State<EditProfileView> {
                 const SizedBox(height: 30),
                 EditProfileForm(
                   fullNameController: fullNameController,
+                  bioController: bioController,
                   emailController: emailController,
                   passwordController: passwordController,
                   oldPasswordController: oldPasswordController,
-                  bioController: bioController,
                 ),
               ],
             ),

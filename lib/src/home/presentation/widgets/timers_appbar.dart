@@ -11,6 +11,7 @@ class TimersAppBar extends StatelessWidget implements PreferredSizeWidget {
         'Timer Automation',
         style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
       ),
+      centerTitle: true,
       leading: const NestedBackButton(),
     );
   }

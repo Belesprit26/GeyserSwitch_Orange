@@ -30,6 +30,11 @@ class EditProfileForm extends StatelessWidget {
           hintText: context.currentUser!.fullName,
         ),
         EditProfileFormField(
+          fieldTitle: 'BIO',
+          controller: bioController,
+          hintText: context.currentUser!.bio,
+        ),
+        EditProfileFormField(
           fieldTitle: 'EMAIL',
           controller: emailController,
           hintText: context.currentUser!.email.obscureEmail,
@@ -49,11 +54,6 @@ class EditProfileForm extends StatelessWidget {
               readOnly: oldPasswordController.text.isEmpty,
             );
           },
-        ),
-        EditProfileFormField(
-          fieldTitle: 'BIO',
-          controller: bioController,
-          hintText: context.currentUser!.bio,
         ),
       ],
     );

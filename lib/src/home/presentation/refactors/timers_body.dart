@@ -143,7 +143,7 @@ class _TimersBodyState extends State<TimersBody> {
                             'Your 2AM Timer has been turned ON Successfully. \nThe geyser will switch off at 4AM');
                       } else if (!is2AM) {
                         CoreUtils.showSnackBar(context,
-                            'Your Your 2AM Timer has been turned OFF Successfully');
+                            'Your 2AM Timer has been turned OFF Successfully');
                       }
                     },
                     child: AnimatedContainer(
