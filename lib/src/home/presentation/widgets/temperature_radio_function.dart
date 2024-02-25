@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/utils/core_utils.dart';
 
-class TempToggle extends StatefulWidget {
+class TempRadio extends StatefulWidget {
   @override
-  State<TempToggle> createState() => _TempToggleState();
+  State<TempRadio> createState() => _TempRadioState();
 }
 
-class _TempToggleState extends State<TempToggle> {
+class _TempRadioState extends State<TempRadio> {
   int _value = 0;
   var setTemp;
 

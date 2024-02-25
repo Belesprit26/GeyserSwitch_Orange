@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/utils/core_utils.dart';
-import 'package:gs_orange/src/home/presentation/widgets/temperature_toggle.dart';
+import 'package:gs_orange/src/home/presentation/widgets/temperature_radio_function.dart';
 
 class AlertDialogPopUp extends StatelessWidget {
   const AlertDialogPopUp({
@@ -30,7 +30,7 @@ class AlertDialogPopUp extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          TempToggle(),
+          TempRadio(),
         ],
       ),
     );

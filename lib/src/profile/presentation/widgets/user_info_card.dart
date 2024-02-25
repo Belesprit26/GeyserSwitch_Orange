@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gs_orange/core/utils/core_utils.dart';
 
 class UserInfoCard extends StatelessWidget {
   const UserInfoCard({
@@ -46,12 +47,16 @@ class UserInfoCard extends StatelessWidget {
                   infoTitle,
                   style: const TextStyle(fontSize: 12),
                 ),
-                Text(
+                SelectableText(
                   infoValue,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                   ),
+                  onTap: () {
+                    CoreUtils.showSnackBar(
+                        context, 'Your UID has been copied: $infoValue');
+                  },
                 ),
               ],
             ),

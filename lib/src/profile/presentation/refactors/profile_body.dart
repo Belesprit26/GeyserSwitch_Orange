@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/res/media_res.dart';
@@ -14,6 +15,7 @@ class ProfileBody extends StatelessWidget {
     return Consumer<UserProvider>(
       builder: (_, provider, __) {
         final user = provider.user;
+        String _copy = user!.uid.toString();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
