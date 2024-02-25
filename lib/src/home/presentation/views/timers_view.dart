@@ -15,7 +15,7 @@ class TimersPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: const TimersAppBar(),
       body: GradientBackground(
-        image: MediaRes.profileGradientBackground,
+        image: MediaRes.onBoardingBackground,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [

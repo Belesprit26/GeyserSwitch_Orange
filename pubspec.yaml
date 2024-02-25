@@ -71,14 +71,20 @@ dependencies:
   swipe_to: ^1.0.2
   url_launcher: ^6.1.12
   youtube_metadata: ^1.0.1
-  video_thumbnail: ^0.5.3
   uuid: ^3.0.7
-  firebase_messaging: ^14.6.9
 
 dev_dependencies:
   bloc_test: ^9.1.4
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/cir.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
   flutter_lints: ^2.0.0
   mockito: ^5.0.15
