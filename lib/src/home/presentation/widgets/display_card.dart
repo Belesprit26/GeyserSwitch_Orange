@@ -18,26 +18,12 @@ class DisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor() {
-      if (value >= 60.00) {
-        return Colours.primaryColour;
-      } else if (value >= 50.0) {
-        return Colours.primaryColour.withOpacity(0.7);
-      } else if (value >= 45.0) {
-        return Colors.green.shade600;
-      } else if (value >= 30.0) {
-        return Colors.blue.withOpacity(.8);
-      } else {
-        return Colours.secondaryColour;
-      }
-    }
-
     return Container(
       height: 180,
       alignment: Alignment.center,
       child: ClipRRect(
         child: BackdropFilter(
-          filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          filter: new ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
           child: SizedBox(
             width: 180,
             height: 180,
@@ -45,10 +31,10 @@ class DisplayCard extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ),
-              shadowColor: getColor(),
+              shadowColor: Colors.white,
               elevation: 3,
               color: Colors.white
-                  .withOpacity(0.6), //For color change use: getColor(),
+                  .withOpacity(0.8), //For color change use: getColor(),
               child: Row(
                 children: [
                   Expanded(

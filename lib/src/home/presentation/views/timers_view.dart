@@ -21,7 +21,7 @@ class TimersPage extends StatelessWidget {
           children: [
             TimersHeader(),
             SizedBox(
-              height: 42,
+              height: 21,
             ),
             TimersBody(),
             SizedBox(

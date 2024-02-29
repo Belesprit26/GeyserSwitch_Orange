@@ -95,14 +95,23 @@ class _TimersBodyState extends State<TimersBody> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //Morning Birds
+        Text(
+          'Early Birds',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 21),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        //02h00
         Container(
-          height: 150,
-          width: 360,
+          width: MediaQuery.of(context).size.width * .93,
+          height: MediaQuery.of(context).size.height * .07,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: Colours.secondaryColour,
+            color: Colors.white70,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
@@ -112,220 +121,85 @@ class _TimersBodyState extends State<TimersBody> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              Text(
-                'Early Birds',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
-              ),
-              SizedBox(
-                height: 36,
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                //2am
-                Column(children: [
-                  Text(
-                    '2AM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        is2AM = !is2AM;
-                      });
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40.0, right: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "02:00",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 27),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      is2AM = !is2AM;
+                    });
 
-                      _firebaseDB.child(userID).update({"2AM": is2AM});
+                    final send =
+                        await _firebaseDB.child(userID).update({"2AM": is2AM});
 
-                      if (is2AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 2AM Timer has been turned ON Successfully. \nThe geyser will switch off at 4AM');
-                      } else if (!is2AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 2AM Timer has been turned OFF Successfully');
-                      }
-                    },
-                    child: AnimatedContainer(
+                    if (is2AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 2AM Timer has been turned ON Successfully. \nThe geyser will run from 2am to 4am');
+                    } else if (!is2AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 2AM Timer has been turned OFF Successfully');
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: animationDuration,
+                    height: 30,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: is2AM
+                          ? Colours.primaryOrange.withOpacity(.5)
+                          : Colours.secondaryColour,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: is2AM
+                              ? Colours.primaryOrange.withOpacity(.2)
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: is2AM ? 10 : 2,
+                        ),
+                      ],
+                    ),
+                    child: AnimatedAlign(
                       duration: animationDuration,
-                      height: 30,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: is2AM
-                            ? Colours.primaryColour.withOpacity(.6)
-                            : Colours.secondaryColour,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: is2AM
-                                ? Colors.white.withOpacity(0.8)
-                                : Colors.grey.shade400.withOpacity(0.7),
-                            spreadRadius: 2,
-                            blurRadius: is2AM ? 10 : 2,
-                          ),
-                        ],
-                      ),
-                      child: AnimatedAlign(
-                        duration: animationDuration,
-                        alignment: is2AM
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
+                      alignment:
+                          is2AM ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
                   ),
-                ]),
-                //4am
-                Column(children: [
-                  Text(
-                    '4AM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        is4AM = !is4AM;
-                      });
-
-                      _firebaseDB.child(userID).update({"4AM": is4AM});
-
-                      if (is4AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 4AM Timer has been turned ON Successfully. \nThe geyser will switch off at 6AM');
-                      } else if (!is4AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 4AM Timer has been turned OFF Successfully');
-                      }
-                    },
-                    child: AnimatedContainer(
-                      duration: animationDuration,
-                      height: 30,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: is4AM
-                            ? Colours.primaryColour.withOpacity(.6)
-                            : Colours.secondaryColour,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: is4AM
-                                ? Colors.white.withOpacity(0.8)
-                                : Colors.grey.shade400.withOpacity(0.7),
-                            spreadRadius: 2,
-                            blurRadius: is4AM ? 10 : 2,
-                          ),
-                        ],
-                      ),
-                      child: AnimatedAlign(
-                        duration: animationDuration,
-                        alignment: is4AM
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]),
-                //6am
-                Column(children: [
-                  Text(
-                    '6AM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        is6AM = !is6AM;
-                      });
-
-                      _firebaseDB.child(userID).update({"6AM": is6AM});
-
-                      if (is6AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 6AM Timer has been turned ON Successfully. \nThe geyser will switch off at 8AM');
-                      } else if (!is6AM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 6AM Timer has been turned OFF Successfully');
-                      }
-                    },
-                    child: AnimatedContainer(
-                      duration: animationDuration,
-                      height: 30,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: is6AM
-                            ? Colours.primaryColour.withOpacity(.6)
-                            : Colours.secondaryColour,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: is6AM
-                                ? Colors.white.withOpacity(0.8)
-                                : Colors.grey.shade400.withOpacity(0.7),
-                            spreadRadius: 2,
-                            blurRadius: is6AM ? 10 : 2,
-                          ),
-                        ],
-                      ),
-                      child: AnimatedAlign(
-                        duration: animationDuration,
-                        alignment: is6AM
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]),
-              ]),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
-          height: 36,
+          height: MediaQuery.of(context).size.height * 0.02,
         ),
-        //Evening Owls
+        //04h00
         Container(
-          height: 150,
-          width: 300,
+          width: MediaQuery.of(context).size.width * .93,
+          height: MediaQuery.of(context).size.height * .07,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: Colours.secondaryColour,
+            color: Colors.white70,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
@@ -335,146 +209,347 @@ class _TimersBodyState extends State<TimersBody> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              Text(
-                'Evening Owls',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                //3pm
-                Column(children: [
-                  Text(
-                    '3PM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        is3PM = !is3PM;
-                      });
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40.0, right: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "04:00",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 27),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      is4AM = !is4AM;
+                    });
 
-                      _firebaseDB.child(userID).update({"3PM": is3PM});
+                    final send =
+                        await _firebaseDB.child(userID).update({"4AM": is4AM});
 
-                      if (is3PM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 3PM Timer has been turned ON Successfully. \nThe geyser will switch off at 5PM');
-                      } else if (!is3PM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 3PM Timer has been turned OFF Successfully');
-                      }
-                    },
-                    child: AnimatedContainer(
+                    if (is4AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 4AM Timer has been turned ON Successfully. \nThe geyser will run from 4am to 6am');
+                    } else if (!is4AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 4AM Timer has been turned OFF Successfully');
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: animationDuration,
+                    height: 30,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: is4AM
+                          ? Colours.primaryOrange.withOpacity(.5)
+                          : Colours.secondaryColour,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: is4AM
+                              ? Colours.primaryOrange.withOpacity(.2)
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: is4AM ? 10 : 2,
+                        ),
+                      ],
+                    ),
+                    child: AnimatedAlign(
                       duration: animationDuration,
-                      height: 30,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: is3PM
-                            ? Colours.primaryColour.withOpacity(.6)
-                            : Colours.secondaryColour,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: is3PM
-                                ? Colors.white.withOpacity(0.8)
-                                : Colors.grey.shade400.withOpacity(0.7),
-                            spreadRadius: 2,
-                            blurRadius: is3PM ? 10 : 2,
-                          ),
-                        ],
-                      ),
-                      child: AnimatedAlign(
-                        duration: animationDuration,
-                        alignment: is3PM
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
+                      alignment:
+                          is4AM ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
                   ),
-                ]),
-                //5pm
-                Column(children: [
-                  Text(
-                    '5PM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        is5PM = !is5PM;
-                      });
-
-                      _firebaseDB.child(userID).update({"5PM": is5PM});
-
-                      if (is5PM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 5PM Timer has been turned ON Successfully. \nThe geyser will switch off at 7PM');
-                      } else if (!is5PM) {
-                        CoreUtils.showSnackBar(context,
-                            'Your 5PM Timer has been turned OFF Successfully');
-                      }
-                    },
-                    child: AnimatedContainer(
-                      duration: animationDuration,
-                      height: 30,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: is5PM
-                            ? Colours.primaryColour.withOpacity(.6)
-                            : Colours.secondaryColour,
-                        border: Border.all(color: Colors.white, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: is5PM
-                                ? Colors.white.withOpacity(0.8)
-                                : Colors.grey.shade400.withOpacity(0.7),
-                            spreadRadius: 2,
-                            blurRadius: is5PM ? 10 : 2,
-                          ),
-                        ],
-                      ),
-                      child: AnimatedAlign(
-                        duration: animationDuration,
-                        alignment: is5PM
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]),
-              ]),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.02,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * .93,
+          height: MediaQuery.of(context).size.height * .07,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white70,
+            border: Border.all(color: Colors.white, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade400.withOpacity(0.7),
+                spreadRadius: 2,
+                blurRadius: 10,
+              ),
             ],
           ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40.0, right: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "06:00",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 27),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      is6AM = !is6AM;
+                    });
+
+                    final send =
+                        await _firebaseDB.child(userID).update({"6AM": is6AM});
+
+                    if (is6AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 6AM Timer has been turned ON Successfully. \nThe geyser will run from 6am to 8am');
+                    } else if (!is6AM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 6AM Timer has been turned OFF Successfully');
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: animationDuration,
+                    height: 30,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: is6AM
+                          ? Colours.primaryOrange.withOpacity(.5)
+                          : Colours.secondaryColour,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: is6AM
+                              ? Colours.primaryOrange.withOpacity(.2)
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: is6AM ? 10 : 2,
+                        ),
+                      ],
+                    ),
+                    child: AnimatedAlign(
+                      duration: animationDuration,
+                      alignment:
+                          is6AM ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.05,
+        ),
+        Text(
+          'Evening Owls',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 21),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        //15h00
+        Container(
+          width: MediaQuery.of(context).size.width * .93,
+          height: MediaQuery.of(context).size.height * .07,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white70,
+            border: Border.all(color: Colors.white, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade400.withOpacity(0.7),
+                spreadRadius: 2,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40.0, right: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "15:00",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 27),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      is3PM = !is3PM;
+                    });
+
+                    await _firebaseDB.child(userID).update({"3PM": is3PM});
+
+                    if (is3PM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 3PM Timer has been turned ON Successfully. \nThe geyser will run from 3pm to 5pm');
+                    } else if (!is3PM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 3PM Timer has been turned OFF Successfully');
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: animationDuration,
+                    height: 30,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: is3PM
+                          ? Colours.primaryOrange.withOpacity(.5)
+                          : Colours.secondaryColour,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: is3PM
+                              ? Colours.primaryOrange.withOpacity(.2)
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: is3PM ? 10 : 2,
+                        ),
+                      ],
+                    ),
+                    child: AnimatedAlign(
+                      duration: animationDuration,
+                      alignment:
+                          is3PM ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.02,
+        ),
+        //17h00
+        Container(
+          width: MediaQuery.of(context).size.width * .93,
+          height: MediaQuery.of(context).size.height * .07,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white70,
+            border: Border.all(color: Colors.white, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade400.withOpacity(0.7),
+                spreadRadius: 2,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40.0, right: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "17:00",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 27),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      is5PM = !is5PM;
+                    });
+
+                    final send =
+                        await _firebaseDB.child(userID).update({"5PM": is5PM});
+
+                    if (is5PM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 5PM Timer has been turned ON Successfully. \nThe geyser will run from 5pm to 7pm');
+                    } else if (!is5PM) {
+                      CoreUtils.showSnackBar(context,
+                          'Your 5PM Timer has been turned OFF Successfully');
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: animationDuration,
+                    height: 30,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: is5PM
+                          ? Colours.primaryOrange.withOpacity(.5)
+                          : Colours.secondaryColour,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: is5PM
+                              ? Colours.primaryOrange.withOpacity(.2)
+                              : Colors.grey.shade400.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: is5PM ? 10 : 2,
+                        ),
+                      ],
+                    ),
+                    child: AnimatedAlign(
+                      duration: animationDuration,
+                      alignment:
+                          is5PM ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.02,
         ),
       ],
     );

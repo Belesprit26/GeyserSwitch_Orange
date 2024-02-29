@@ -19,28 +19,12 @@ class TimersHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Please note ${user!.fullName.split(' ').first}:' ??
-                    'Please note',
+                'Recommended timers: ',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
               ),
             ],
           ),
-          SizedBox(
-            height: 6,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "All timers run automatically\n"
-                "and are set to Eskom's Off \n"
-                "-Peak hours to maximize \nsavings.",
-                textAlign: TextAlign.start,
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.5),
-              ),
-            ],
-          )
         ],
       );
     });

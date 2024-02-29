@@ -12,10 +12,15 @@ class Colours {
   ];
 
   /// #458CFF
-  static const primaryColour = Color(0xFFF88C00);
+  static const primaryColour = Color(0xFF000000);
+
+  static const primaryWhite = Color(0xFFFFFFFF);
+
+  ///Orange
+  static const primaryOrange = Color(0xFFF88C00);
 
   ///
-  static const secondaryColour = Color(0xFF989FD5);
+  static const secondaryColour = Color(0xFF000000);
 
   /// #757C8E
   static const neutralTextColour = Color(0xFF757C8E);

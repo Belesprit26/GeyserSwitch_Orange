@@ -24,7 +24,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           itemBuilder: (_) => [
-            //Notifications
+            /* //Notifications
             PopupMenuItem<void>(
               child: const PopupItem(
                   title: "Notifications",
@@ -33,7 +33,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: Colours.neutralTextColour,
                   )),
               onTap: () => context.push(const Placeholder()),
-            ),
+            ),*/
 
             //Timers
             PopupMenuItem<void>(

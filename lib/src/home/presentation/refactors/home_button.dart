@@ -69,16 +69,16 @@ class _HomeButtonState extends State<HomeButton> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: isEnabled
-                ? Colours.primaryColour.withOpacity(.5)
+                ? Colours.primaryOrange.withOpacity(.4)
                 : Colours.secondaryColour,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
                 color: isEnabled
-                    ? Colours.primaryColour.withOpacity(.4)
-                    : Colors.grey.shade400.withOpacity(0.7),
+                    ? Colours.primaryOrange.withOpacity(.3)
+                    : Colors.grey.shade400.withOpacity(0.1),
                 spreadRadius: 2,
-                blurRadius: isEnabled ? 10 : 2,
+                blurRadius: isEnabled ? 10 : 3,
               ),
             ],
           ),

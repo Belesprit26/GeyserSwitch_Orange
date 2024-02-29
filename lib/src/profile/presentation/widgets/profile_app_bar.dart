@@ -48,7 +48,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            const PopupMenuItem<void>(
+            /* const PopupMenuItem<void>(
               child: PopupItem(
                 title: 'Notification',
                 icon: Icon(
@@ -56,7 +56,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: Colours.neutralTextColour,
                 ),
               ),
-            ),
+            ),*/
             const PopupMenuItem<void>(
               child: PopupItem(
                 title: 'Help',
