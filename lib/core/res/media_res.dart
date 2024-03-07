@@ -28,6 +28,9 @@ class MediaRes {
       '$_baseImage/documents_gradient_background.png';
   static const leaderboardGradientBackground =
       '$_baseImage/leaderboard_gradient_background.png';
+  static const gs_Logo = '$_baseImage/GS_EC.png';
+  static const gs_Logo1 = '$_baseImage/GS_EC1.png';
+  static const gs_Logo2 = '$_baseImage/GS_EC2.png';
 
   static const pageUnderConstruction =
       '$_baseLottie/page_under_construction.json';

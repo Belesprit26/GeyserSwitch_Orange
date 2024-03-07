@@ -10,7 +10,7 @@ class PageContent extends Equatable {
 
   const PageContent.first()
       : this(
-          image: MediaRes.casualReading,
+          image: MediaRes.gs_Logo2,
           title: 'Welcome to GeyserSwitch Orange',
           description:
               'This is the first user friendly, user first energy management tool'
@@ -19,7 +19,7 @@ class PageContent extends Equatable {
 
   const PageContent.second()
       : this(
-          image: MediaRes.casualLife,
+          image: MediaRes.gs_Logo2,
           title: 'Features available to you today',
           description:
               '- Switch your geyser on/off from anywhere in the world.\n '
@@ -29,7 +29,7 @@ class PageContent extends Equatable {
 
   const PageContent.third()
       : this(
-          image: MediaRes.casualMeditationScience,
+          image: MediaRes.gs_Logo2,
           title: 'Simple Setup',
           description: '1) Register an account here.\n '
               '2) Power your GeyserSwitch unit up.\n'
