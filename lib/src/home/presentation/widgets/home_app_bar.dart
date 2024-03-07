@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/src/home/presentation/views/timers_view.dart';
+import 'package:gs_orange/src/timers/presentation/views/timers_view.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({Key? key}) : super(key: key);
@@ -24,37 +24,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           itemBuilder: (_) => [
-            /* //Notifications
-            PopupMenuItem<void>(
-              child: const PopupItem(
-                  title: "Notifications",
-                  icon: Icon(
-                    Icons.notifications_none_outlined,
-                    color: Colours.neutralTextColour,
-                  )),
-              onTap: () => context.push(const Placeholder()),
-            ),*/
-
-            //Timers
-            PopupMenuItem<void>(
-              child: const PopupItem(
-                  title: "Timer Automation",
-                  icon: Icon(
-                    Icons.watch_later_outlined,
-                    color: Colours.neutralTextColour,
-                  )),
-              onTap: () => context.push(const TimersPage()),
-            ),
-            PopupMenuItem<void>(
-              height: 1,
-              padding: EdgeInsets.zero,
-              child: Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-                endIndent: 16,
-                indent: 16,
-              ),
-            ),
             PopupMenuItem<void>(
               child: const PopupItem(
                   title: "Log Out",

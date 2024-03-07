@@ -23,8 +23,8 @@ class HomeHeader extends StatelessWidget {
           ),
           const Center(
             child: Image(
-              image: AssetImage('assets/images/gs.png'),
-              height: 180,
+              image: AssetImage('assets/images/GSLogo-07.png'),
+              height: 160,
               width: 300,
             ),
           ),

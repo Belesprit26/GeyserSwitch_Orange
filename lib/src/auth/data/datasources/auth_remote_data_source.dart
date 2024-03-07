@@ -206,7 +206,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             email: user.email ?? fallbackEmail,
             fullName: user.displayName ?? '',
             profilePic: user.photoURL ?? '',
-            points: 0,
             temperature: 0.0,
           ).toMap(),
         );

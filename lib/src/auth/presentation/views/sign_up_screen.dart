@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     const Text(
-                      'Easy to learn, discover more skills.',
+                      'Welcome, \nto GeyserSwitch.',
                       style: TextStyle(
                         fontFamily: Fonts.aeonik,
                         fontWeight: FontWeight.w700,
@@ -90,7 +90,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SignInScreen.routeName,
                           );
                         },
-                        child: const Text('Already have an account?'),
+                        child: const Text(
+                          'Already have an account?',
+                          style: TextStyle(color: Colors.black87),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),

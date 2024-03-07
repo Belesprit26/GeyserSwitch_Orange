@@ -77,13 +77,13 @@ class _DashboardState extends State<Dashboard> {
                   BottomNavigationBarItem(
                     icon: Icon(
                       controller.currentIndex == 1
-                          ? IconlyBold.chat
-                          : IconlyLight.chat,
+                          ? IconlyBold.time_square
+                          : IconlyLight.time_square,
                       color: controller.currentIndex == 1
                           ? Colours.primaryColour
                           : Colors.grey,
                     ),
-                    label: 'Chat',
+                    label: 'Timers',
                     backgroundColor: Colors.white,
                   ),
                   BottomNavigationBarItem(

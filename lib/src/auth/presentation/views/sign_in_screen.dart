@@ -57,11 +57,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     const Text(
-                      'Easy to learn, discover more skills.',
+                      'Efficiency, Conveniently.',
                       style: TextStyle(
                         fontFamily: Fonts.aeonik,
                         fontWeight: FontWeight.w700,
                         fontSize: 32,
+                        letterSpacing: 1,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -82,7 +83,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                 SignUpScreen.routeName,
                               );
                             },
-                            child: const Text('Register account?'),
+                            child: const Text(
+                              'Register account?',
+                              style: TextStyle(color: Colors.black87),
+                            ),
                           ),
                         ),
                       ],
@@ -100,7 +104,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/forgot-password');
                         },
-                        child: const Text('Forgot password?'),
+                        child: const Text(
+                          'Forgot password?',
+                          style: TextStyle(color: Colors.black87),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),

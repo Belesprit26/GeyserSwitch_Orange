@@ -73,6 +73,15 @@ dependencies:
   youtube_metadata: ^1.0.1
   uuid: ^3.0.7
 
+  flutter_lints: ^2.0.0
+  mockito: ^5.0.15
+  mocktail: ^1.0.0
+  very_good_analysis: ^5.0.0+1
+  firebase_auth_mocks: ^0.12.0
+  google_sign_in_mocks: ^0.3.0
+  fake_cloud_firestore: ^2.4.1+1
+  firebase_storage_mocks: ^0.6.1
+
 dev_dependencies:
   bloc_test: ^9.1.4
   flutter_test:
@@ -85,15 +94,6 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icons/cir.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
-
-  flutter_lints: ^2.0.0
-  mockito: ^5.0.15
-  mocktail: ^1.0.0
-  very_good_analysis: ^5.0.0+1
-  firebase_auth_mocks: ^0.12.0
-  google_sign_in_mocks: ^0.3.0
-  fake_cloud_firestore: ^2.4.1+1
-  firebase_storage_mocks: ^0.6.1
 
   #the tryout
   retrofit_generator: 8.0.6

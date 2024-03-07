@@ -136,7 +136,6 @@ void main() {
           password: tPassword,
         );
         expect(result.uid, userCredential.user!.uid);
-        expect(result.points, 0);
         verify(
           () => authClient.signInWithEmailAndPassword(
             email: tEmail,

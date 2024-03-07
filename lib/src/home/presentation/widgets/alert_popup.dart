@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/core/utils/core_utils.dart';
-import 'package:gs_orange/src/home/presentation/widgets/temperature_radio_function.dart';
+import 'package:gs_orange/src/home/presentation/widgets/temp_radio_function.dart';
 
 class AlertDialogPopUp extends StatelessWidget {
   const AlertDialogPopUp({
@@ -17,7 +15,6 @@ class AlertDialogPopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: const Text('Max Temp Settings.'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +22,7 @@ class AlertDialogPopUp extends StatelessWidget {
           const Text(
             'Desired Temperature',
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
           ),
           SizedBox(
             height: 10,

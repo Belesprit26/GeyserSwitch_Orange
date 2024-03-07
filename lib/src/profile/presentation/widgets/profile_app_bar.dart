@@ -81,7 +81,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 title: 'Logout',
                 icon: Icon(
                   Icons.logout_rounded,
-                  color: Colors.black,
+                  color: Colors.red,
                 ),
               ),
               onTap: () async {

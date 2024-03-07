@@ -15,7 +15,7 @@ class ProfileView extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: const ProfileAppBar(),
       body: GradientBackground(
-        image: MediaRes.profileGradientBackground,
+        image: MediaRes.onBoardingBackground,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: const [

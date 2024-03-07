@@ -1,0 +1,3 @@
+This test folder is not included in the initial release.
+The tests passed but the method changed so they no longer do
+- the tests will remain uncorrected until the feature gets used formally

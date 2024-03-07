@@ -19,63 +19,66 @@ class DisplayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180,
+      width: 150,
+      height: 150,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: Colors.transparent,
+        border: Border.all(color: Colors.transparent, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(.6),
+            spreadRadius: 2,
+            blurRadius: 10,
+          ),
+        ],
+      ),
       alignment: Alignment.center,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: new ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: SizedBox(
-            width: 180,
-            height: 180,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              shadowColor: Colors.white,
-              elevation: 3,
-              color: Colors.white
-                  .withOpacity(0.8), //For color change use: getColor(),
-              child: Row(
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(80),
+        ),
+        shadowColor: Colors.white70,
+        elevation: 1,
+        color: Colors.white70, //For color change use: getColor(),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image(
-                          width: 25,
-                          image: assetImage,
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          '$value$unit',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                  Image(
+                    width: 24,
+                    image: assetImage,
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    '$value$unit',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

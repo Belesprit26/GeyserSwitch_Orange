@@ -65,11 +65,11 @@ class _TempRadioState extends State<TempRadio> {
                     _value = value!;
                   });
 
-                  _firebaseDB.child(userID).update({"setTemp": 65});
+                  _firebaseDB.child(userID).update({"setTemp": 64.7});
 
                   if (_value == 1) {
-                    CoreUtils.showSnackBar(context,
-                        'Your desired maximum temperature is set to 65°C. \nThe geyser will switch off at 65°C');
+                    CoreUtils.showSnackBar(
+                        context, 'Your geyser will now turn off at 65°C.');
                   }
                   Future.delayed(Duration(milliseconds: 300), () {
                     Navigator.pop(context, true);
@@ -96,8 +96,8 @@ class _TempRadioState extends State<TempRadio> {
                   _firebaseDB.child(userID).update({"setTemp": 60});
 
                   if (_value == 2) {
-                    CoreUtils.showSnackBar(context,
-                        'Your desired maximum temperature is set to 60°C. \nThe geyser will switch off at 60°C');
+                    CoreUtils.showSnackBar(
+                        context, 'Your geyser will now turn off at 60°C.');
                   }
                   Future.delayed(Duration(milliseconds: 300), () {
                     Navigator.pop(context, true);
@@ -124,8 +124,8 @@ class _TempRadioState extends State<TempRadio> {
                   _firebaseDB.child(userID).update({"setTemp": 50});
 
                   if (_value == 3) {
-                    CoreUtils.showSnackBar(context,
-                        'Your desired maximum temperature is set to 50°C. \nThe geyser will switch off at 50°C');
+                    CoreUtils.showSnackBar(
+                        context, 'Your geyser will now turn off at 50°C.');
                   }
 
                   Future.delayed(Duration(milliseconds: 300), () {

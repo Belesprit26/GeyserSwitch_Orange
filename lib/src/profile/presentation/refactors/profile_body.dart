@@ -19,36 +19,6 @@ class ProfileBody extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: UserInfoCard(
-                    infoThemeColour: Colours.physicsTileColour,
-                    infoIcon: const Icon(
-                      IconlyLight.shield_fail,
-                      size: 24,
-                      color: Color(0xFF767DFF),
-                    ),
-                    infoTitle: 'Load Shedding',
-                    infoValue: user!.enrolledCourseIds.length.toString(),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: UserInfoCard(
-                    infoThemeColour: Colours.languageTileColour,
-                    infoIcon: Image.asset(
-                      MediaRes.scoreboard,
-                      height: 24,
-                      width: 24,
-                    ),
-                    infoTitle: 'Timers',
-                    infoValue: user.points.toString(),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
             /*Row(
               children: [
                 Expanded(

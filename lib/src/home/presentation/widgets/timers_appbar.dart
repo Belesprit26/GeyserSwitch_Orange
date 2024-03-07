@@ -8,11 +8,10 @@ class TimersAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        'Timer Automation',
+        'Timers',
         style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
       ),
-      centerTitle: true,
-      leading: const NestedBackButton(),
+      centerTitle: false,
     );
   }
 

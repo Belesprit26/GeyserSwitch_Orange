@@ -16,7 +16,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
             final localUser = LocalUserModel(
               uid: user.uid,
               email: user.email ?? '',
-              points: 0,
               fullName: user.displayName ?? '',
               temperature: 0.0,
             );

@@ -17,7 +17,7 @@ class Colours {
   static const primaryWhite = Color(0xFFFFFFFF);
 
   ///Orange
-  static const primaryOrange = Color(0xFFF88C00);
+  static const primaryOrange = Color(0xFF64B5F6) /*(0xFF81D4FA)*/;
 
   ///
   static const secondaryColour = Color(0xFF000000);
