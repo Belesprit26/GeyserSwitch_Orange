@@ -65,7 +65,7 @@ class _TempRadioState extends State<TempRadio> {
                     _value = value!;
                   });
 
-                  _firebaseDB.child(userID).update({"setTemp": 64.7});
+                  _firebaseDB.child(userID).update({"setTemp": 65});
 
                   if (_value == 1) {
                     CoreUtils.showSnackBar(
