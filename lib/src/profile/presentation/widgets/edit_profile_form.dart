@@ -30,7 +30,7 @@ class EditProfileForm extends StatelessWidget {
           hintText: context.currentUser!.fullName,
         ),
         EditProfileFormField(
-          fieldTitle: 'BIO',
+          fieldTitle: 'ADDRESS',
           controller: bioController,
           hintText: context.currentUser!.bio,
         ),

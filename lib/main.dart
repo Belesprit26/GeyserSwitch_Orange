@@ -1,4 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
@@ -11,6 +10,9 @@ import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_control
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
+import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
+import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -37,9 +39,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DashboardController()),
-        //BlocProvider(create: (_) => sl<LoadSheddingBloc>()),
+        ChangeNotifierProvider(create: (_) => HomeButtonProvider()),
+        ChangeNotifierProvider(create: (_) => TimerProvider()),
+        ChangeNotifierProvider(create: (_) => CustomTimerProvider()),
       ],
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'GeyserSwitch Orange',
         theme: ThemeData(
           useMaterial3: true,
@@ -52,6 +57,13 @@ class MyApp extends StatelessWidget {
             accentColor: Colours.primaryColour,
           ),
         ),
+        builder: (context, child) {
+          // Add the MediaQuery to disable text scaling
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!,
+          );
+        },
         onGenerateRoute: generateRoute,
       ),
     );

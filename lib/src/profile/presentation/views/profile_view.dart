@@ -10,16 +10,16 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
-      appBar: const ProfileAppBar(),
-      body: GradientBackground(
-        image: MediaRes.onBoardingBackground,
-        child: ListView(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: const ProfileAppBar(),
+        body: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: const [
+            SizedBox(height: 36),
             ProfileHeader(),
+            SizedBox(height: 45),
             ProfileBody(),
           ],
         ),

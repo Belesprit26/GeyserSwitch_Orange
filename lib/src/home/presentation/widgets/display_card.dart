@@ -6,79 +6,66 @@ class DisplayCard extends StatelessWidget {
   const DisplayCard({
     Key? key,
     required this.value,
-    required this.name,
-    required this.assetImage,
     required this.unit,
   }) : super(key: key);
 
   final double value;
-  final String name;
   final String unit;
-  final AssetImage assetImage;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
-      height: 150,
+      width: 217, // 5% increase from 207
+      height: 217, // 5% increase from 207
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: Colors.transparent,
-        border: Border.all(color: Colors.transparent, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(.6),
-            spreadRadius: 2,
-            blurRadius: 10,
-          ),
-        ],
-      ),
-      alignment: Alignment.center,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(80),
-        ),
-        shadowColor: Colors.white70,
-        elevation: 1,
-        color: Colors.white70, //For color change use: getColor(),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image(
-                    width: 24,
-                    image: assetImage,
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    '$value$unit',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+        shape: BoxShape.circle,
+        gradient: SweepGradient(
+          colors: [
+            Colours.primaryOrange.withOpacity(0.8),
+            Colors.redAccent.withOpacity(0.4),
+            Colors.blueAccent.withOpacity(0.4),
           ],
+          stops: const [0.25, 0.75, 1.0],
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: 195, // 5% increase from 186
+          height: 195, // 5% increase from 186
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Temperature value
+              Text(
+                '${value.toInt()}°',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 48,
+                  color: Colors.black,
+                ),
+              ),
+              // Unit below the temperature
+              Text(
+                unit,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

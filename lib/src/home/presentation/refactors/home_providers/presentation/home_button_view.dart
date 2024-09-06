@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:gs_orange/core/res/colours.dart';
 import 'package:provider/provider.dart';
+import 'package:gs_orange/core/res/colours.dart';
+import 'package:gs_orange/core/utils/core_utils.dart';
 
-import 'home_providers/home_button_provider.dart';
+import '../home_button_provider.dart';
 
-class HomeButton extends StatelessWidget {
-  const HomeButton({Key? key}) : super(key: key);
+
+class HomeButton1 extends StatelessWidget {
+  const HomeButton1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeButtonProvider>(
-      builder: (context, homeButtonProvider, child) {
-        final isEnabled = homeButtonProvider.isEnabled;
-        final isLoading = homeButtonProvider.isLoading;
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.black87,),
+          );
+        }
 
         return Center(
           child: GestureDetector(
-            onTap: isLoading
-                ? null // Disable tap if it's loading
-                : () {
-              homeButtonProvider.toggleGeyser(); // Toggle the geyser state
+            onTap: () {
+              provider.toggleGeyser();
+
+              if (provider.isEnabled) {
+                CoreUtils.showSnackBar(context, 'Your Geyser has been turned ON Successfully');
+              } else {
+                CoreUtils.showSnackBar(context, 'Your Geyser has been turned OFF Successfully');
+              }
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -27,27 +36,23 @@ class HomeButton extends StatelessWidget {
               width: 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: isEnabled
+                color: provider.isEnabled
                     ? Colours.primaryOrange.withOpacity(.5)
                     : Colours.secondaryColour,
                 border: Border.all(color: Colors.white, width: 2),
                 boxShadow: [
                   BoxShadow(
-                    color: isEnabled
+                    color: provider.isEnabled
                         ? Colours.primaryOrange.withOpacity(.2)
                         : Colors.grey.shade400.withOpacity(0.3),
                     spreadRadius: 2,
-                    blurRadius: isEnabled ? 10 : 3,
+                    blurRadius: provider.isEnabled ? 10 : 3,
                   ),
                 ],
               ),
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator()) // Show loading spinner
-                  : AnimatedAlign(
+              child: AnimatedAlign(
                 duration: const Duration(milliseconds: 300),
-                alignment: isEnabled
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
+                alignment: provider.isEnabled ? Alignment.centerRight : Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Container(

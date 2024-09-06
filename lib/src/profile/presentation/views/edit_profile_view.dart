@@ -12,6 +12,10 @@ import 'package:gs_orange/src/profile/presentation/widgets/edit_profile_form.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/common/app/providers/user_provider.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -29,11 +33,37 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   File? pickedImage;
 
+  // Function to save the profile image path in SharedPreferences
+  Future<void> saveProfileImagePath(String imagePath) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('profileImagePath', imagePath);
+  }
+
+  // Modify the pickImage function to store the image path
   Future<void> pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         pickedImage = File(image.path);
+      });
+
+      // Save the image path to SharedPreferences
+      await saveProfileImagePath(image.path);
+
+      // Notify UserProvider of the updated image path
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.updateProfileImage(image.path);
+    }
+  }
+
+  // Function to load the profile image path from SharedPreferences
+  Future<void> loadProfileImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cachedImagePath = prefs.getString('profileImagePath');
+
+    if (cachedImagePath != null) {
+      setState(() {
+        pickedImage = File(cachedImagePath);
       });
     }
   }
@@ -62,6 +92,8 @@ class _EditProfileViewState extends State<EditProfileView> {
     fullNameController.text = context.currentUser!.fullName.trim();
     bioController.text = context.currentUser!.bio?.trim() ?? '';
     super.initState();
+    // Load the cached image path
+    loadProfileImagePath();
   }
 
   @override
@@ -86,100 +118,98 @@ class _EditProfileViewState extends State<EditProfileView> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            leading: const NestedBackButton(),
-            title: const Text(
-              'Edit Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              leading: const NestedBackButton(),
+              title: const Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
+                ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  if (nothingChanged) context.pop();
-                  final bloc = context.read<AuthBloc>();
-                  if (passwordChanged) {
-                    if (oldPasswordController.text.isEmpty) {
-                      CoreUtils.showSnackBar(
-                        context,
-                        'Please enter your old password',
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (nothingChanged) context.pop();
+                    final bloc = context.read<AuthBloc>();
+                    if (passwordChanged) {
+                      if (oldPasswordController.text.isEmpty) {
+                        CoreUtils.showSnackBar(
+                          context,
+                          'Please enter your old password',
+                        );
+                        return;
+                      }
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.password,
+                          userData: jsonEncode({
+                            'oldPassword': oldPasswordController.text.trim(),
+                            'newPassword': passwordController.text.trim(),
+                          }),
+                        ),
                       );
-                      return;
                     }
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.password,
-                        userData: jsonEncode({
-                          'oldPassword': oldPasswordController.text.trim(),
-                          'newPassword': passwordController.text.trim(),
-                        }),
-                      ),
-                    );
-                  }
-                  if (nameChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.displayName,
-                        userData: fullNameController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (emailChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.email,
-                        userData: emailController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (bioChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.bio,
-                        userData: bioController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (imageChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.profilePic,
-                        userData: pickedImage,
-                      ),
-                    );
-                  }
-                },
-                child: state is AuthLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : StatefulBuilder(
-                        builder: (_, refresh) {
-                          fullNameController.addListener(() => refresh(() {}));
-                          bioController.addListener(() => refresh(() {}));
-                          emailController.addListener(() => refresh(() {}));
-                          passwordController.addListener(() => refresh(() {}));
-                          return Text(
-                            'Done',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: nothingChanged
-                                  ? Colors.grey
-                                  : Colors.blueAccent,
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
-          body: GradientBackground(
-            image: MediaRes.profileGradientBackground,
-            child: ListView(
+                    if (nameChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.displayName,
+                          userData: fullNameController.text.trim(),
+                        ),
+                      );
+                    }
+                    if (emailChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.email,
+                          userData: emailController.text.trim(),
+                        ),
+                      );
+                    }
+                    if (bioChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.bio,
+                          userData: bioController.text.trim(),
+                        ),
+                      );
+                    }
+                    if (imageChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.profilePic,
+                          userData: pickedImage,
+                        ),
+                      );
+                    }
+                  },
+                  child: state is AuthLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : StatefulBuilder(
+                          builder: (_, refresh) {
+                            fullNameController.addListener(() => refresh(() {}));
+                            bioController.addListener(() => refresh(() {}));
+                            emailController.addListener(() => refresh(() {}));
+                            passwordController.addListener(() => refresh(() {}));
+                            return Text(
+                              'Done',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: nothingChanged
+                                    ? Colors.grey
+                                    : Colors.blueAccent,
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
+            body: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 Builder(
@@ -190,7 +220,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                             ? null
                             : user.profilePic;
                     return CircleAvatar(
-                      radius: 50,
+                      radius: 60,
                       backgroundImage: pickedImage != null
                           ? FileImage(pickedImage!)
                           : userImage != null
@@ -201,8 +231,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                         alignment: AlignmentDirectional.center,
                         children: [
                           Container(
-                            height: 100,
-                            width: 100,
+                            height: 120,
+                            width: 120,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.black.withOpacity(.5),

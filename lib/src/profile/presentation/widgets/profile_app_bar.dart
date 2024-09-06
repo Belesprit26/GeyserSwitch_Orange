@@ -18,7 +18,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        'Account',
+        'Your Profile',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 24,
@@ -48,15 +48,6 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            /* const PopupMenuItem<void>(
-              child: PopupItem(
-                title: 'Notification',
-                icon: Icon(
-                  IconlyLight.notification,
-                  color: Colours.neutralTextColour,
-                ),
-              ),
-            ),*/
             const PopupMenuItem<void>(
               child: PopupItem(
                 title: 'Help',
