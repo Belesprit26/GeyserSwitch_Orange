@@ -5,12 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/src/timers/presentation/views/timers_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../core/common/app/providers/user_provider.dart';
-import '../../../../core/res/media_res.dart';
 import '../../../../core/utils/time-helper.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {

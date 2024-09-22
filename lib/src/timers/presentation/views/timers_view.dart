@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_header.dart';
 import 'package:gs_orange/src/timers/presentation/widgets/timers_appbar.dart';
-import '../refactors/custom_timer.dart';
 import '../refactors/custom_timer_provider/presentation/custom_timer.dart';
 import '../refactors/timers_providers/presentation/timer_body.dart';
 

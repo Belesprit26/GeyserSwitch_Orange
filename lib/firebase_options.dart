@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -50,22 +47,35 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCvhm9ZC2e_-o6KWSPqOlK7PxEhJoRucFk  ',
+    apiKey: 'AIzaSyCvhm9ZC2e_-o6KWSPqOlK7PxEhJoRucFk',
     appId: '1:945487010136:android:45be5f8f0faab7dc50ad2d',
     messagingSenderId: '945487010136',
     projectId: 'geyserswitch-bloc',
+    databaseURL: 'https://geyserswitch-bloc-default-rtdb.firebaseio.com',
     storageBucket: 'geyserswitch-bloc.appspot.com',
   );
 
-//TODO:[IOS Firebase option settings not forgetting the android MessengerID Change]
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB5OewkoTew0NvsibcoAP8WzPMWeEw0D6c',
-    appId: '1:82345376775:ios:2105835aad4a032551bea2',
-    messagingSenderId: '82345376775',
-    projectId: 'education-app-8d22d',
-    storageBucket: 'education-app-8d22d.appspot.com',
-    iosClientId:
-        '82345376775-thpugduk7690h3g7q7kh4cpd3u4gron3.apps.googleusercontent.com',
-    iosBundleId: 'com.dbestech.educationApp',
+    apiKey: 'AIzaSyB_6atWVa_Om_wQdc3gvhPObRPIfc3-nx0',
+    appId: '1:945487010136:ios:167b7c5fb5d853fd50ad2d',
+    messagingSenderId: '945487010136',
+    projectId: 'geyserswitch-bloc',
+    databaseURL: 'https://geyserswitch-bloc-default-rtdb.firebaseio.com',
+    storageBucket: 'geyserswitch-bloc.appspot.com',
+    iosBundleId: 'com.geyserswitch.gsOrange',
   );
+
+//TODO:[IOS Firebase option settings not forgetting the android MessengerID Change]
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyD2m4T7ylElcXPbPS9YupoRFX2ebfjB7bI',
+    appId: '1:945487010136:web:e8a4a59dc40813b550ad2d',
+    messagingSenderId: '945487010136',
+    projectId: 'geyserswitch-bloc',
+    authDomain: 'geyserswitch-bloc.firebaseapp.com',
+    databaseURL: 'https://geyserswitch-bloc-default-rtdb.firebaseio.com',
+    storageBucket: 'geyserswitch-bloc.appspot.com',
+    measurementId: 'G-KGZ1VBFRL0',
+  );
+
 }

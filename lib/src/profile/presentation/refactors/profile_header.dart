@@ -44,7 +44,7 @@ class ProfileHeader extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6.0),
                     child: Text(
-                      user?.bio ?? 'No Bio',
+                       'GeyserSwitch User',
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12, // Slightly smaller for bio

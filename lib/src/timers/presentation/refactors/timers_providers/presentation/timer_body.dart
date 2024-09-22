@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/utils/core_utils.dart';
 import 'package:provider/provider.dart';
 

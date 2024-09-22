@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "945487010136",
+    "firebase_url": "https://geyserswitch-bloc-default-rtdb.firebaseio.com",
     "project_id": "geyserswitch-bloc",
     "storage_bucket": "geyserswitch-bloc.appspot.com"
   },
