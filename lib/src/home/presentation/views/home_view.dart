@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_body.dart';
 import 'package:gs_orange/src/home/presentation/widgets/home_app_bar.dart';
-
-import '../../../../core/services/push_notifications/push_notifications_service2.dart';
 import '../refactors/home_providers/presentation/home_button_view.dart';
 import '../refactors/home_upper_text.dart';
 

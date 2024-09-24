@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
+import 'package:gs_orange/core/services/push_notifications/get_service_key.dart';
+import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 import 'package:gs_orange/src/auth/data/models/user_model.dart';
 import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:gs_orange/src/dashboard/presentation/utils/dashboard_utils.dart';
@@ -10,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../core/permissions/permissions_methods.dart';
-import '../../../../core/services/push_notifications/push_notifications_service2.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -25,7 +21,8 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   @override
-  PermissionMethods permissionMethods = PermissionMethods();
+  NotificationService notificationService = NotificationService();
+  GetServerKey getServerKey = GetServerKey();
 
   void initState() {
     super.initState();
@@ -33,55 +30,15 @@ class _DashboardState extends State<Dashboard> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    dashSetup();
-    notificationHandler();
+    initialSetup();
   }
 
-  void notificationHandler(){
-    FirebaseMessaging.onMessage.listen((event) async {
-      print(event.notification!.title);
-      PushNotificationService2().showNotification(event);
-    });
-
-    // Initialize the database and reference
-    FirebaseDatabase database = FirebaseDatabase.instance;
-    DatabaseReference ref = database.ref("path/to/data");
-
-    // Listen to data changes at the reference
-    ref.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
-      print('Data from Firebase: $data');
-    });
-
-    // Enable offline persistence for Firebase Realtime Database
-    database.setPersistenceEnabled(true);
-
-    // Enable offline persistence for Firestore
-    FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
-
-    // Listen for changes in the connection status for Realtime Database
-    database.ref(".info/connected").onValue.listen((event) {
-      bool connected = event.snapshot.value as bool;
-      if (!connected) {
-        print('Disconnected from Firebase, retrying connection...');
-        // Handle reconnection logic here, e.g., show a message to the user
-      }
-    });
-
-  }
-
-  dashSetup() async {
-    initializePushNotificationService()
-    {
-      PushNotificationService2 notificationService = PushNotificationService2();
-      notificationService.generateDeviceRecognitionToken();
-      notificationService.requestIOSPermissions();
-      notificationService.initialize();
-      //notificationService.startListeningForNewNotification(context);
-    }
-
-    await initializePushNotificationService();
-    await permissionMethods.askNotificationsPermissions();
+  void initialSetup()async{
+    NotificationService.requestNotificationPermissions(context);
+    notificationService.firebaseInit(context);
+    notificationService.setupInteractMessage(context);
+    await notificationService.getDeviceToken();
+    getServerKey.getServerKeyToken();
   }
 
   @override
@@ -102,7 +59,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               bottomNavigationBar:
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(9),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -118,10 +75,11 @@ class _DashboardState extends State<Dashboard> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.0),
                     child: BottomNavigationBar(
+                      selectedItemColor: Colors.black,
                       currentIndex: controller.currentIndex,
-                      showSelectedLabels: false,
+                      showSelectedLabels: true,
                       backgroundColor: Colors.white,
-                      elevation: 8,
+                      elevation: 0,
                       onTap: controller.changeIndex,
                       items: [
                         BottomNavigationBarItem(
@@ -136,19 +94,6 @@ class _DashboardState extends State<Dashboard> {
                           label: 'Home',
                           backgroundColor: Colors.white,
                         ),
-                        //Eskom Feature
-                        /*BottomNavigationBarItem(
-                          icon: Icon(
-                            controller.currentIndex == 1
-                                ? IconlyBold.document
-                                : IconlyLight.document,
-                            color: controller.currentIndex == 1
-                                ? Colours.primaryColour
-                                : Colors.grey,
-                          ),
-                          label: 'Materials',
-                          backgroundColor: Colors.white,
-                        ),*/
                         BottomNavigationBarItem(
                           icon: Icon(
                             controller.currentIndex == 1

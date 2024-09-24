@@ -52,7 +52,23 @@ class ProfileBody extends StatelessWidget {
                             size: 24,
                           ),
                           infoTitle: 'Address',
-                          infoValue: user.bio.toString(),
+                          infoValue: user.bio.toString() == null ? "Please update your Address." : user.bio.toString(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: UserInfoCard(
+                          infoThemeColour: Colours.neutralTextColour,
+                          infoIcon: const Icon(
+                            IconlyLight.location,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          infoTitle: 'Last Connection',
+                          infoValue: user.bio.toString() == null ? "Please update your Address." : user.bio.toString(),
                         ),
                       ),
                     ],

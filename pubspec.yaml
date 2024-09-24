@@ -43,7 +43,9 @@ dependencies:
   desktop_webview_auth: ^0.0.14
   googleapis: ^13.2.0
   googleapis_auth: ^1.6.0
+  http: ^1.2.1
   permission_handler: ^11.3.1
+  app_settings: ^5.1.1
 
   bloc: ^8.1.2
   chewie: ^1.7.0
@@ -62,7 +64,6 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   get: ^4.6.5
   get_it: ^7.6.0
-  http: ^1.0.0
   iconly: ^1.0.1
   image_picker: ^1.0.2
   #tryout

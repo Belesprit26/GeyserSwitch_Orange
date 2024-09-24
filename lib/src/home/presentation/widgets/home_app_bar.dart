@@ -27,7 +27,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   void initState() {
     super.initState();
     // Simulate loading (you should replace this with actual async loading logic)
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         isLoading = false;
       });
