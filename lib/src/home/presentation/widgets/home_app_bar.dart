@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
@@ -122,4 +120,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
       ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

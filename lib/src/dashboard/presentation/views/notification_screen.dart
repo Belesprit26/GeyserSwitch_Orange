@@ -30,8 +30,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 leading: const Icon(Icons.notifications_active),
                 title:
                     Text(widget.message!.notification!.title.toString() ?? 'GeyserSwitch Notification', style: TextStyle(fontWeight: FontWeight.w500),),
-                subtitle: Text(widget.message!.notification!.body.toString() ?? 'An alert was registered', style: TextStyle(fontSize: 13)),
-                trailing: Text(widget.message!.data['screen'].toString()),
+                subtitle: Text(widget.message!.notification!.body.toString() ?? 'An alert was registered', style: TextStyle(fontSize: 12)),
+                trailing: Text(widget.message!.data['info'].toString(), style: TextStyle(fontSize: 10)),
               ),
             )
           : const Center(
