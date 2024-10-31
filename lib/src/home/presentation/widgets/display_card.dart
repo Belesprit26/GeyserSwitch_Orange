@@ -23,7 +23,7 @@ class DisplayCard extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: SweepGradient(
           colors: [
-            Colours.primaryOrange.withOpacity(0.8),
+            Colours.primaryOrange.withOpacity(0.6),
             Colors.redAccent.withOpacity(0.4),
             Colors.blueAccent.withOpacity(0.4),
           ],
