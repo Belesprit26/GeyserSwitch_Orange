@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
 
+import '../../../esp_32/wifi_provisioning.dart';
+import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart'; // Assuming this is where your ConnectionLinkProvider is
+
 class ProfileBody extends StatelessWidget {
   const ProfileBody({super.key});
 
@@ -15,6 +18,7 @@ class ProfileBody extends StatelessWidget {
       builder: (_, provider, __) {
         final user = provider.user;
         String _copy = user!.uid.toString();
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -22,9 +26,10 @@ class ProfileBody extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Text('My Unit info',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 21)),
+                  const Text(
+                    'My Unit info',
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 21),
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -52,26 +57,40 @@ class ProfileBody extends StatelessWidget {
                             size: 24,
                           ),
                           infoTitle: 'Address',
-                          infoValue: user.bio.toString() == null ? "Please update your Address." : user.bio.toString(),
+                          infoValue: user.bio?.toString() ?? "Please update your Address.",
                         ),
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: UserInfoCard(
-                          infoThemeColour: Colours.neutralTextColour,
-                          infoIcon: const Icon(
-                            IconlyLight.location,
-                            color: Colors.white,
-                            size: 24,
+                  // Adding the streaming functionality for GeyserSwitch linking info
+                  Consumer<ConnectionLinkProvider>(
+                    builder: (context, connectionLinkProvider, child) {
+                      String displayTime = 'loading'; // Default value if updateTime is null or too short
+
+                      // Check if updateTime is not null and long enough
+                      if (connectionLinkProvider.updateTime != null &&
+                          connectionLinkProvider.updateTime.length > 3) {
+                        displayTime =
+                        '${connectionLinkProvider.updateTime.substring(0, connectionLinkProvider.updateTime.length - 3)} \n${connectionLinkProvider.updateDate}';
+                      }
+
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: UserInfoCard(
+                              infoThemeColour: Colours.neutralTextColour,
+                              infoIcon: const Icon(
+                                IconlyLight.time_square,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              infoValue: displayTime,
+                              infoTitle: 'Last Update ',
+                            ),
                           ),
-                          infoTitle: 'Last Connection',
-                          infoValue: user.bio.toString() == null ? "Please update your Address." : user.bio.toString(),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

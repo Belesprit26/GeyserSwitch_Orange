@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
-import 'package:gs_orange/core/extensions/context_extension.dart';
 import 'package:gs_orange/core/res/colours.dart';
+import 'package:gs_orange/src/esp_32/wifi_provisioning.dart';
+import 'package:gs_orange/src/home/presentation/widgets/asset_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/common/app/providers/user_provider.dart';
@@ -40,25 +41,21 @@ class _HomeAppBarState extends State<HomeAppBar> {
       title: Consumer<UserProvider>(
         builder: (_, provider, __) {
           final user = provider.user;
-          final cachedImage = provider.cachedProfileImagePath;
+         // final cachedImage = provider.cachedProfileImagePath;
 
           return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // Profile Image
-              CircleAvatar(
-                radius: 27,
+              /*CircleAvatar(
+                radius: 30,
                 backgroundColor: Colors.transparent,
-                backgroundImage: isLoading
-                    ? const AssetImage("assets/icons/gs_icon.png") // Show loading icon or placeholder
-                    : cachedImage != null
-                    ? FileImage(File(cachedImage))
-                    : (user?.profilePic != null && user!.profilePic!.isNotEmpty
-                    ? NetworkImage(user.profilePic!)
-                    : const AssetImage("assets/icons/gs_icon.png")) as ImageProvider,
-              ),
-              const SizedBox(width: 16),
-
+                backgroundImage:
+                const AssetImage("assets/images/GS_EC1.png"),
+              ),*/
+              AssetImageWidget(imagePath: 'assets/images/GS_EC1.png', width: 60, height: 60, fit: BoxFit.contain,),
+              const SizedBox(width: 15),
               // Name and Bio
               Expanded(
                 child: Column(
@@ -97,6 +94,22 @@ class _HomeAppBarState extends State<HomeAppBar> {
             borderRadius: BorderRadius.circular(20),
           ),
           itemBuilder: (_) => [
+            PopupMenuItem<void>(
+              child: const PopupItem(
+                title: "(Re)Set Credentials",
+                icon: Icon(
+                  Icons.upload,
+                  color: Colours.neutralTextColour,
+                ),
+              ),
+              onTap: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => WiFiConfigPage(),
+                  ),
+                );
+              },
+            ),
             PopupMenuItem<void>(
               child: const PopupItem(
                 title: "Log Out",

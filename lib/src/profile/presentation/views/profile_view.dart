@@ -1,5 +1,3 @@
-import 'package:gs_orange/core/common/widgets/gradient_background.dart';
-import 'package:gs_orange/core/res/media_res.dart';
 import 'package:gs_orange/src/profile/presentation/refactors/profile_body.dart';
 import 'package:gs_orange/src/profile/presentation/refactors/profile_header.dart';
 import 'package:gs_orange/src/profile/presentation/widgets/profile_app_bar.dart';

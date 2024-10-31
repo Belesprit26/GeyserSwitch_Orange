@@ -7,16 +7,18 @@ class DisplayCard extends StatelessWidget {
     Key? key,
     required this.value,
     required this.unit,
+    this.isLoading = false, // New parameter for loading indicator
   }) : super(key: key);
 
   final double value;
   final String unit;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 217, // 5% increase from 207
-      height: 217, // 5% increase from 207
+      width: 217,
+      height: 217,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: SweepGradient(
@@ -30,8 +32,8 @@ class DisplayCard extends StatelessWidget {
       ),
       child: Center(
         child: Container(
-          width: 195, // 5% increase from 186
-          height: 195, // 5% increase from 186
+          width: 195,
+          height: 195,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
@@ -43,27 +45,36 @@ class DisplayCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              // Temperature value
-              Text(
-                '${value.toInt()}°',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 48,
-                  color: Colors.black,
+              // Display CircularProgressIndicator when loading
+              if (isLoading)
+                const CircularProgressIndicator()
+              else
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Temperature value
+                    Text(
+                      '${value.toInt()}°',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 48,
+                        color: Colors.black,
+                      ),
+                    ),
+                    // Unit below the temperature
+                    Text(
+                      unit,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              // Unit below the temperature
-              Text(
-                unit,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                  color: Colors.black54,
-                ),
-              ),
             ],
           ),
         ),

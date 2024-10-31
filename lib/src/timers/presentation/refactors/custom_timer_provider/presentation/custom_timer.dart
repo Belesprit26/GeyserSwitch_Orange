@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 
-import '../../../../../../core/services/push_notifications/send_notification_service.dart';
 import '../../../../../../core/utils/core_utils.dart';
-import '../custom_timer_provider.dart';
 
 class CustomTimer extends StatelessWidget {
   const CustomTimer({super.key});
@@ -76,11 +75,11 @@ class CustomTimer extends StatelessWidget {
                           await provider.updateCustomTime(formattedTime);
                         }
                         //Notification tester
-                        await SendNotificationService.sendNotificationUsingApi(
-                            token: 'chNBK6hix0cLspkMtKqgoC:APA91bE0cSGExuIngXoTuqbOiiyZsgri-eDG-W1L-wWF7YDvJ-U9lNNK217eeW4JF_GSJunuNPCvPT7z2pNtWoMDJQ99LkDkZgWHEgIGzZLBebKt1qhIJNWTtOdk3cUiQxaAVvL4Brqk',
+                        /*await SendNotificationService.sendNotificationUsingApi(
+                            token: 'dtuwPkO5S56LNCJkJHyoGl:APA91bGp4r_zTP0oueU135OzaSPuQfazVTFWHSGFXwZv1GRQv59vVt6dqL0Yr2On61ZUYaMjHLCVvI2hvtMeFFiiSKCobkMh_wLxohHDxHRAr5_mF9dm1knNmIxJs1hSYoyYGmR7aCvy',
                             title: "Checking stuff",
                             body: "This is the official check of the body",
-                            data: {"screen": "Timers"});
+                            data: {"info": "Timers"});*/
                       },
                       child: Text(
                         provider.customTime == "" || provider.customTime == null

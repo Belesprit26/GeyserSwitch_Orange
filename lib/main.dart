@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
+import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ Future<void> _firebaseBackgroundHanlder(RemoteMessage message)async{
     name: "GeyserSwitch-Orange",
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  print("Handling a background message: ${message.messageId}");
 }
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +51,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeButtonProvider()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
         ChangeNotifierProvider(create: (_) => CustomTimerProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectionLinkProvider(),
+        ),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

@@ -18,7 +18,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        'Your Profile',
+        'My Profile',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 24,

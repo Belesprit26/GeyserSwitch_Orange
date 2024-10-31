@@ -749,6 +749,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  glowy_borders:
+    dependency: "direct main"
+    description:
+      name: glowy_borders
+      sha256: a0ace5b193047deab00ed2646065b0ef91bf1efef5b3579851bcc6bc7e0748b4
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -1297,10 +1305,10 @@ packages:
     dependency: transitive
     description:
       name: rxdart
-      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      sha256: "2ef8b4e91cb3b55d155e0e34eeae0ac7107974e451495c955ac04ddee8cc21fd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.27.7"
+    version: "0.26.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1506,6 +1514,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: dde81d3a318d914e26b6882051c486b0f5e4fa13e7bc3661741de78f0397fe64
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.1.56"
+  syncfusion_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_gauges
+      sha256: eed675fbe3cbf8f6d812bd2ab1cb631d1092d995563872d5a2e8381edfc965ec
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.1.56"
   synchronized:
     dependency: transitive
     description:

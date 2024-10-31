@@ -13,13 +13,13 @@ class GeyserStatus extends StatelessWidget {
       builder: (context, provider, _) {
         final isGeyserOn = provider.isEnabled;
 
-        return Center(
-          child: Text(
-            isGeyserOn ? "Your Smart Geyser is On!" : "Your Smart Geyser is Off!",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+        return Container(
+          width: double.infinity,
+          height: 100,
+          child: Center(
+            child: Text(
+              isGeyserOn ? "This Smart Geyser is On" : "This Smart Geyser is Off",
+                style: TextStyle(color: Colors.black, fontSize: 19.5),
             ),
           ),
         );

@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gs_orange/src/dashboard/presentation/views/dashboard.dart';
 import 'package:gs_orange/src/dashboard/presentation/views/notification_screen.dart';
 import '../../utils/core_utils.dart';
 
@@ -138,18 +139,20 @@ class NotificationService {
 
   //handle tap on notification when app is in background or terminated
   Future<void> setupInteractMessage(BuildContext context) async {
-    // // when app is terminated
-    // RemoteMessage? initialMessage =
-    //     await FirebaseMessaging.instance.getInitialMessage();
+     // when app is terminated
+     RemoteMessage? initialMessage =
+         await FirebaseMessaging.instance.getInitialMessage();
 
-    // if (initialMessage != null) {
-    //   handleMessage(context, initialMessage);
-    // }
+     if (initialMessage != null) {
+       handleMessage(context, initialMessage);
+     }
 
     //when app i0s background
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       handleMessage(context, event);
     });
+
+   // FirebaseMessaging.onMessageOpenedApp.listen(handleMessage as void Function(RemoteMessage event)?);
 
     // Handle terminated state
     FirebaseMessaging.instance
@@ -225,11 +228,20 @@ class NotificationService {
     print(
         "Navigating to appointments screen. Hit here to handle the message. Message data: ${message.data}");
 
-   Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NotificationScreen(message: message),
-      ),
-    );
+    if (message.data['info'] != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  NotificationScreen(message: message),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Dashboard(),
+        ),
+      );
+    }
   }
 }
