@@ -33,14 +33,14 @@ class ProfileBody extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: UserInfoCard(
+                        child: UserInfoCard2(
                           infoThemeColour: Colours.neutralTextColour,
                           infoIcon: const Icon(
                             IconlyLight.message,
                             color: Colors.white,
                             size: 24,
                           ),
-                          infoTitle: 'Email',
+                          infoTitle: 'Unit Email Address',
                           infoValue: user.email.toString(),
                         ),
                       ),
