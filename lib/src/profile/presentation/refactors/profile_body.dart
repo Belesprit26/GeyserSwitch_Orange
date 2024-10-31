@@ -33,7 +33,7 @@ class ProfileBody extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: UserInfoCard2(
+                        child: UserInfoCard(
                           infoThemeColour: Colours.neutralTextColour,
                           infoIcon: const Icon(
                             IconlyLight.message,
