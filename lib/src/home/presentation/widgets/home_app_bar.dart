@@ -27,9 +27,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
     super.initState();
     // Simulate loading (you should replace this with actual async loading logic)
     Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 
@@ -39,22 +41,20 @@ class _HomeAppBarState extends State<HomeAppBar> {
       title: Consumer<UserProvider>(
         builder: (_, provider, __) {
           final user = provider.user;
-         // final cachedImage = provider.cachedProfileImagePath;
 
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // Profile Image
-              /*CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.transparent,
-                backgroundImage:
-                const AssetImage("assets/images/GS_EC1.png"),
-              ),*/
-              AssetImageWidget(imagePath: 'assets/images/GS_EC1.png', width: 60, height: 60, fit: BoxFit.contain,),
+              AssetImageWidget(
+                imagePath: 'assets/images/GS_EC1.png',
+                width: 60,
+                height: 60,
+                fit: BoxFit.contain,
+              ),
               const SizedBox(width: 15),
-              // Name and Bio
+              // Name and Greeting
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,16 +63,15 @@ class _HomeAppBarState extends State<HomeAppBar> {
                       user?.fullName ?? 'No User',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 21, // Adjust to match the boldness in screenshot
+                        fontSize: 21,
                       ),
                     ),
                     Text(
-                      'Good ${TimeHelper.getTimeOfTheDay()} ${user!.fullName.split(' ').first}' ??
-                          'Good Morning',
+                      'Good ${TimeHelper.getTimeOfTheDay()} ${user?.fullName.split(' ').first ?? ''}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 12, // Slightly smaller for bio
+                        fontSize: 12,
                         color: Colors.black54,
                       ),
                     ),
@@ -119,8 +118,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
               onTap: () async {
                 // Clear cached image from SharedPreferences
                 final prefs = await SharedPreferences.getInstance();
-                await prefs.remove('profileImagePath'); // Remove the cached image path
-                // Clear the user state (e.g., user provider)
+                await prefs.remove('profileImagePath');
+                // Clear the user state
                 Provider.of<UserProvider>(context, listen: false).user = null;
 
                 final navigator = Navigator.of(context);
