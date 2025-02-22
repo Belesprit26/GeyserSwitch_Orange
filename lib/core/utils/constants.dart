@@ -5,7 +5,7 @@ const kBaseUrl = 'developer.sepush.co.za';
 const kToken = '4ECF9AD1-0E704B10-BF575234-9524D598';
 var kRegion = '';
 
-//  New method
+//  New Load shedding method
 class Urls {
   static const String baseUrl = 'https://developer.sepush.co.za/2.0/status';
   static const String apiKey = '4ECF9AD1-0E704B10-BF575234-9524D598';

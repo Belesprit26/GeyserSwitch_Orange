@@ -1,50 +1,52 @@
 import UIKit
 import Flutter
-import Firebase // Import Firebase
+import Firebase
+import UserNotifications
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate { // Inherits from FlutterAppDelegate
+@objc class AppDelegate: FlutterAppDelegate {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        // Configure Firebase
+        FirebaseApp.configure()
 
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    // Initialize Firebase
-    FirebaseApp.configure() // This initializes Firebase services
+        // Set UNUserNotificationCenter Delegate
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: { granted, error in
+                    if let error = error {
+                        print("Authorization error: \(error.localizedDescription)")
+                    }
+                    print("Notification permission granted: \(granted)")
+                }
+            )
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
 
-    // Set the UNUserNotificationCenter delegate for handling notifications
-    UNUserNotificationCenter.current().delegate = self
+        // Register for remote notifications
+        application.registerForRemoteNotifications()
 
-    // Register the app to receive remote notifications (APNs)
-    application.registerForRemoteNotifications()
+        // This is required to initialize Flutter properly
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
 
-    // Call the Flutter generated plugin registrant to register plugins
-    GeneratedPluginRegistrant.register(with: self)
+    // Handle token refresh
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
 
-    // Continue the normal app initialization process
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-
-  // APNs has assigned the device a unique token, register it with Firebase
-  override func application(_ application: UIApplication,
-                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    // Set the APNs token in Firebase Messaging
-    Messaging.messaging().apnsToken = deviceToken
-  }
-
-  // Handle notifications when the app is in the foreground
-  override func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                       willPresent notification: UNNotification,
-                                       withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    // Show the notification even when the app is in the foreground
-    completionHandler([.alert, .badge, .sound])
-  }
-
-  // Handle the response to a notification when the user interacts with it
-  override func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                       didReceive response: UNNotificationResponse,
-                                       withCompletionHandler completionHandler: @escaping () -> Void) {
-    // Handle the notification response and trigger any necessary actions
-    completionHandler()
-  }
+    // Handle error when registration fails
+    override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for remote notifications: \(error.localizedDescription)")
+    }
 }

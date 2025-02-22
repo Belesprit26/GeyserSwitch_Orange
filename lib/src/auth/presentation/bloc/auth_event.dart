@@ -57,3 +57,11 @@ class UpdateUserEvent extends AuthEvent {
   @override
   List<Object?> get props => [action, userData];
 }
+
+class DeleteUserEvent extends AuthEvent {
+  final String password;
+  const DeleteUserEvent(this.password);
+
+  @override
+  List<Object?> get props => [password];
+}

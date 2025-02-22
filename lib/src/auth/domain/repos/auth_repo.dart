@@ -22,4 +22,8 @@ abstract class AuthRepo {
     required UpdateUserAction action,
     required dynamic userData,
   });
+
+  ResultFuture<void> deleteUser({
+    required String password
+  });
 }

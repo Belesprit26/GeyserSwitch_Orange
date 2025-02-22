@@ -44,3 +44,7 @@ class AuthError extends AuthState {
   @override
   List<String> get props => [message];
 }
+
+class UserDeleted extends AuthState {
+  const UserDeleted();
+}

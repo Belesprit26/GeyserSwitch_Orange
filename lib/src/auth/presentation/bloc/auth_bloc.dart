@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:gs_orange/core/enums/update_user.dart';
 import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/usecases/delete_user.dart';
 import 'package:gs_orange/src/auth/domain/usecases/forgot_password.dart';
 import 'package:gs_orange/src/auth/domain/usecases/sign_in.dart';
 import 'package:gs_orange/src/auth/domain/usecases/sign_up.dart';
@@ -20,11 +21,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required SignUp signUp,
     required ForgotPassword forgotPassword,
     required UpdateUser updateUser,
+    required DeleteUser deleteUser,
   })  : _signIn = signIn,
         _signUp = signUp,
         _forgotPassword = forgotPassword,
         _updateUser = updateUser,
-        super(const AuthInitial()) {
+        _deleteUser = deleteUser,
+      super(const AuthInitial()) {
     on<AuthEvent>((event, emit) {
       emit(const AuthLoading());
     });
@@ -32,12 +35,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpEvent>(_signUpHandler);
     on<ForgotPasswordEvent>(_forgotPasswordHandler);
     on<UpdateUserEvent>(_updateUserHandler);
+    on<DeleteUserEvent>(_deleteUserHandler);
   }
 
   final SignIn _signIn;
   final SignUp _signUp;
   final ForgotPassword _forgotPassword;
   final UpdateUser _updateUser;
+  final DeleteUser _deleteUser;
 
   Future<void> _signInHandler(
     SignInEvent event,
@@ -96,6 +101,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthError(failure.errorMessage)),
       (_) => emit(const UserUpdated()),
+    );
+  }
+
+  Future<void> _deleteUserHandler(
+    DeleteUserEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+
+    final result = await _deleteUser(
+      DeleteUserParams(password: event.password),
+    );
+
+    result.fold(
+      (failure) => emit(AuthError(failure.errorMessage)),
+      (_) {
+        // Successfully deleted, emit UserDeleted state
+        emit(const UserDeleted());
+      },
     );
   }
 }
