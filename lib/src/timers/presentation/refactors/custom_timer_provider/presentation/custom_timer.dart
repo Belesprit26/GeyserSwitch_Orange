@@ -74,12 +74,6 @@ class CustomTimer extends StatelessWidget {
                           final formattedTime = _formatTime(picked);
                           await provider.updateCustomTime(formattedTime);
                         }
-                        //Notification tester
-                        /*await SendNotificationService.sendNotificationUsingApi(
-                            token: 'dtuwPkO5S56LNCJkJHyoGl:APA91bGp4r_zTP0oueU135OzaSPuQfazVTFWHSGFXwZv1GRQv59vVt6dqL0Yr2On61ZUYaMjHLCVvI2hvtMeFFiiSKCobkMh_wLxohHDxHRAr5_mF9dm1knNmIxJs1hSYoyYGmR7aCvy',
-                            title: "Checking stuff",
-                            body: "This is the official check of the body",
-                            data: {"info": "Timers"});*/
                       },
                       child: Text(
                         provider.customTime == "" || provider.customTime == null

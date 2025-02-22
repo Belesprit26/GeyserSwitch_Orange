@@ -50,7 +50,9 @@ class HomeButtonProvider with ChangeNotifier {
             maxTemp: (geyserData['max_temp'] as num?)?.toDouble() ?? 0.0,
           );
 
-          geyserList.add(geyser);
+          if(geyser.temperature != -127){
+            geyserList.add(geyser);
+          }
 
           // Listen to state changes for each geyser
           _listenToGeyserStateChanges(userGeysersRef.child(geyserId), geyser);
@@ -83,7 +85,23 @@ class HomeButtonProvider with ChangeNotifier {
   // Method to listen to sensor data changes for a specific geyser
   void _listenToGeyserSensorChanges(DatabaseReference geyserRef, Geyser geyser) {
     geyserRef.child(geyser.sensorKey).onValue.listen((event) {
-      final newTemperature = (event.snapshot.value as num?)?.toDouble() ?? 0.0;
+      final value = event.snapshot.value;
+      double newTemperature;
+      
+      if (value is num) {
+        newTemperature = value.toDouble();
+      } else if (value is Map) {
+        // If the value is a map, try to extract the temperature value
+        // You might need to adjust this depending on your data structure
+        final tempValue = value.values.firstWhere(
+          (v) => v is num,
+          orElse: () => 0,
+        );
+        newTemperature = (tempValue as num).toDouble();
+      } else {
+        newTemperature = 0.0;
+      }
+      
       geyser.temperature = newTemperature;
     });
   }

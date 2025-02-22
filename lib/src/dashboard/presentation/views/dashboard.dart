@@ -1,6 +1,5 @@
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/core/services/push_notifications/get_service_key.dart';
 import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 import 'package:gs_orange/src/auth/data/models/user_model.dart';
 import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_controller.dart';
@@ -20,25 +19,24 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  @override
-  NotificationService notificationService = NotificationService();
-  GetServerKey getServerKey = GetServerKey();
+  final NotificationService _notificationService = NotificationService();
 
   void initState() {
     super.initState();
+    _initializeNotifications();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    initialSetup();
   }
 
-  void initialSetup()async{
-    NotificationService.requestNotificationPermissions(context);
-    notificationService.firebaseInit(context);
-    notificationService.setupInteractMessage(context);
-    await notificationService.getDeviceToken();
-    getServerKey.getServerKeyToken();
+  void _initializeNotifications() {
+    NotificationService.requestNotificationPermissions(context).then((_) {
+      _notificationService.getDeviceToken().then((_) {
+        _notificationService.initLocalNotifications(context);
+        _notificationService.firebaseInit(context);
+      });
+    });
   }
 
   @override

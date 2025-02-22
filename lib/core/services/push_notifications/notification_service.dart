@@ -1,247 +1,242 @@
-//get token
-// ignore_for_file: avoid_print, unused_local_variable
-
 import 'dart:io';
-import 'package:app_settings/app_settings.dart';
+
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:gs_orange/src/dashboard/presentation/views/dashboard.dart';
-import 'package:gs_orange/src/dashboard/presentation/views/notification_screen.dart';
-import '../../utils/core_utils.dart';
 
 class NotificationService {
-  //initialising firebase message plugin
+  // Firebase Messaging instance
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //initialising firebase message plugin
+
+  // Flutter Local Notifications Plugin
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-  final _currentUser = FirebaseAuth.instance.currentUser;
-  DatabaseReference databaseReference = FirebaseDatabase.instance
-      .ref()
-      .child("GeyserSwitch")
-      .child(FirebaseAuth.instance.currentUser!.uid)
-      .child("ServiceInfo");
+  // Reference to the current user
+  final User? _currentUser = FirebaseAuth.instance.currentUser;
 
+  // Reference to the database path for storing tokens
+  late DatabaseReference databaseReference;
 
-  //send notificartion request
-  static Future<void> requestNotificationPermissions(BuildContext context) async {//initialising firebase message plugin
+  NotificationService() {
+    if (_currentUser != null) {
+      databaseReference = FirebaseDatabase.instance
+          .ref()
+          .child("GeyserSwitch")
+          .child(_currentUser!.uid)
+          .child("ServiceInfo");
+    }
+  }
+
+  // Request notification permissions
+  static Future<void> requestNotificationPermissions(BuildContext context) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
-      carPlay: true,
+      carPlay: false,
       criticalAlert: true,
       provisional: true,
       sound: true,
     );
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      if (kDebugMode) {
-        print('user granted permission');
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Notification permissions are denied')),
+      );
+    }
+  }
+
+  // Fetch and store the device token
+  Future<void> getDeviceToken() async {
+    try {
+      // Check platform
+      if (Platform.isIOS) {
+        // Request provisional authorization for iOS
+        await messaging.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
       }
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      if (kDebugMode) {
-        print('user granted provisional permission');
+
+      String? token;
+      try {
+        token = await messaging.getToken(
+          vapidKey: Platform.isIOS ? null : 'YOUR_VAPID_KEY', // Only for web
+        );
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error getting FCM token: $e');
+        }
+        // Return early if we can't get the token
+        return;
       }
-    } else {
-      CoreUtils.showSnackBar(context,'Notification permissions Denied, please enable Notifications');
-      Future.delayed(Duration(seconds: 2), () {
-        AppSettings.openAppSettings();
-      });
+
       if (kDebugMode) {
-        print('user denied permission');
+        print('FCM Token: $token');
+      }
+
+      if (token != null && _currentUser != null) {
+        try {
+          // Store the token in the database under 'notificationTokens'
+          await databaseReference.child('notificationTokens').update({
+            token: true,
+          });
+
+          // Listen for token refresh
+          messaging.onTokenRefresh.listen((newToken) async {
+            if (kDebugMode) {
+              print('Token refreshed: $newToken');
+            }
+            try {
+              await databaseReference.child('notificationTokens').update({
+                newToken: true,
+              });
+            } catch (e) {
+              if (kDebugMode) {
+                print('Error storing refreshed token: $e');
+              }
+            }
+          });
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error storing FCM token: $e');
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Fatal error in getDeviceToken: $e');
       }
     }
   }
 
-//Fetch FCM Token
-  Future<String> getDeviceToken() async {
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
+  // Initialize local notifications
+  void initLocalNotifications(BuildContext context) {
+    const AndroidInitializationSettings androidInitializationSettings =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosInitializationSettings =
+    DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
-    String? token = await messaging.getToken();
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iosInitializationSettings,
+    );
 
-    try {
-      await messaging.getToken().then((token) async {
-        await databaseReference.set({
-          'notificationToken': token,
-          'email': _currentUser!.email,
-          'name': _currentUser!.displayName,
-        });
-      });
-
-      await messaging.onTokenRefresh.listen((token) async {
-        print("Token refreshed: $token");
-        await databaseReference.set({
-          'notificationToken': token,
-          'email': _currentUser!.email,
-          'name': _currentUser!.displayName,
-        });
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-
-    print("token=> $token");
-    return token!;
+    _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // Handle notification tap when the app is in the foreground
+        print('Notification tapped with payload: ${response.payload}');
+        // Open the app normally
+      },
+    );
   }
 
-  //function to initialise flutter local notification plugin to show notifications for android when app is active
-  void initLocalNotifications(
-      BuildContext context, RemoteMessage message) async {
-    var androidInitializationSettings =
-    const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var iosInitializationSettings = const DarwinInitializationSettings();
-
-    var initializationSetting = InitializationSettings(
-        android: androidInitializationSettings, iOS: iosInitializationSettings);
-
-    await _flutterLocalNotificationsPlugin.initialize(initializationSetting,
-        onDidReceiveNotificationResponse: (payload) {
-          // handle interaction when app is active for android
-          handleMessage(context, message);
-        });
-  }
-
-//
+  // Set up Firebase messaging listeners
   void firebaseInit(BuildContext context) {
-    FirebaseMessaging.onMessage.listen((message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification!.android;
-
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (kDebugMode) {
-        print("notifications title:${notification!.title}");
-        print("notifications body:${notification.body}");
-        print('count:${android!.count}');
-        print('data:${message.data.toString()}');
+        print('Received a message while in the foreground!');
+        print('Message data: ${message.data}');
       }
 
-      if (Platform.isIOS) {
-        forgroundMessage();
-      }
-
-      if (Platform.isAndroid) {
-        initLocalNotifications(context, message);
+      if (message.notification != null) {
+        // Show a local notification
         showNotification(message);
       }
     });
-  }
 
-  //handle tap on notification when app is in background or terminated
-  Future<void> setupInteractMessage(BuildContext context) async {
-     // when app is terminated
-     RemoteMessage? initialMessage =
-         await FirebaseMessaging.instance.getInitialMessage();
-
-     if (initialMessage != null) {
-       handleMessage(context, initialMessage);
-     }
-
-    //when app i0s background
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      handleMessage(context, event);
+    // Handle background and terminated state messages
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Open the app normally;
+      print('Notification opened from background state.');
     });
 
-   // FirebaseMessaging.onMessageOpenedApp.listen(handleMessage as void Function(RemoteMessage event)?);
-
-    // Handle terminated state
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null && message.data.isNotEmpty) {
-        handleMessage(context, message);
+    // For handling when the app is terminated
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        // Open the app normally
+        print('Notification opened from terminated state.');
       }
     });
   }
 
-  // function to show visible notification when app is active
+  // Show a local notification
   Future<void> showNotification(RemoteMessage message) async {
-    AndroidNotificationChannel channel = AndroidNotificationChannel(
-      message.notification!.android!.channelId.toString(),
-      message.notification!.android!.channelId.toString(),
-      importance: Importance.max,
-      showBadge: true,
-      playSound: true,
-      // sound: const RawResourceAndroidNotificationSound('jetsons_doorbell'),
-    );
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
 
-    AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails(
-        channel.id.toString(), channel.name.toString(),
-        channelDescription: 'Channel Description',
-        importance: Importance.high,
+    if (notification != null && android != null) {
+      const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+        'high_importance_channel',
+        'High Importance Notifications',
+        channelDescription: 'This channel is used for important notifications.',
+        importance: Importance.max,
         priority: Priority.high,
-        playSound: true,
-        ticker: 'ticker',
-        sound: channel.sound
-      //     sound: RawResourceAndroidNotificationSound('jetsons_doorbell')
-      //  icon: largeIconPath
-    );
+      );
 
-    //IOS settings
-    const DarwinNotificationDetails darwinNotificationDetails =
-    DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+      const NotificationDetails notificationDetails = NotificationDetails(
+        android: androidDetails,
+      );
 
-    NotificationDetails notificationDetails = NotificationDetails(
-        android: androidNotificationDetails, iOS: darwinNotificationDetails);
-
-    //Show Notification
-    Future.delayed(Duration.zero, () {
-      _flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification!.title.toString(),
-        message.notification!.body.toString(),
+      await _flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
         notificationDetails,
-        payload: 'my_data',
+        payload: 'Default_Sound',
       );
-    });
+    }
   }
 
-  //ios message
-  Future forgroundMessage() async {
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-  }
+  Future<void> sendNotification({
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    if (_currentUser == null) {
+      return;
+    }
 
-  Future<void> handleMessage(
-      BuildContext context,
-      RemoteMessage message,
-      ) async {
-    print(
-        "Navigating to appointments screen. Hit here to handle the message. Message data: ${message.data}");
+    // Fetch all device tokens for the current user
+    DataSnapshot snapshot = await databaseReference.child('notificationTokens').get();
 
-    if (message.data['info'] != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  NotificationScreen(message: message),
-        ),
-      );
+    if (snapshot.exists) {
+      Map<dynamic, dynamic> tokensMap = snapshot.value as Map<dynamic, dynamic>;
+      List<String> tokens = tokensMap.keys.cast<String>().toList();
+
+      final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('sendNotification');
+
+      try {
+        final response = await callable.call({
+          'tokens': tokens,
+          'title': title,
+          'body': body,
+          'data': data,
+        });
+        if (kDebugMode) {
+          print('Notification sent successfully: ${response.data}');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error sending notification: $e');
+        }
+      }
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Dashboard(),
-        ),
-      );
+      if (kDebugMode) {
+        print('No tokens found for user.');
+      }
     }
   }
 }

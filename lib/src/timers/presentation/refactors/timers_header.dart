@@ -8,7 +8,6 @@ class TimersHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (_, provider, __) {
-      final user = provider.user;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

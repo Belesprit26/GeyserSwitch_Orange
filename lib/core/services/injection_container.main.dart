@@ -9,18 +9,18 @@ Future<void> init() async {
 
 void setupSL() {
   //bloc
-  sl.registerFactory(() => LoadSheddingBloc(sl()));
+  //sl.registerFactory(() => LoadSheddingBloc(sl()));
 
   //usecase
   sl.registerLazySingleton(() => GetCurrentStageUsecase(sl()));
 
   //repository
-  sl.registerLazySingleton<LoadSheddingRepository>(
-      () => LoadSheddingRepositoryImpl(loadSheddingRemoteDataSource: sl()));
+  /*sl.registerLazySingleton<LoadSheddingRepository>(
+      () => LoadSheddingRepositoryImpl(loadSheddingRemoteDataSource: sl()));*/
 
   //datasource
-  sl.registerLazySingleton<LoadSheddingRemoteDataSource>(
-      () => LoadSheddingRemoteDataSourceImpl(client: sl()));
+ /* sl.registerLazySingleton<LoadSheddingRemoteDataSource>(
+      () => LoadSheddingRemoteDataSourceImpl(client: sl()));*/
 
   //external
   sl.registerLazySingleton(() => http.Client());
@@ -34,12 +34,14 @@ Future<void> _initAuth() async {
         signUp: sl(),
         forgotPassword: sl(),
         updateUser: sl(),
+        deleteUser: sl(),
       ),
     )
     ..registerLazySingleton(() => SignIn(sl()))
     ..registerLazySingleton(() => SignUp(sl()))
     ..registerLazySingleton(() => ForgotPassword(sl()))
     ..registerLazySingleton(() => UpdateUser(sl()))
+    ..registerLazySingleton(() => DeleteUser(sl()))
     ..registerLazySingleton<AuthRepo>(() => AuthRepoImpl(sl()))
     ..registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(

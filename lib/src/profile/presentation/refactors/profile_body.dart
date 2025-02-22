@@ -1,12 +1,9 @@
-import 'package:flutter/services.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/src/profile/presentation/widgets/user_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
-
-import '../../../esp_32/wifi_provisioning.dart';
 import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart'; // Assuming this is where your ConnectionLinkProvider is
 
 class ProfileBody extends StatelessWidget {
@@ -17,7 +14,7 @@ class ProfileBody extends StatelessWidget {
     return Consumer<UserProvider>(
       builder: (_, provider, __) {
         final user = provider.user;
-        String _copy = user!.uid.toString();
+        user!.uid.toString();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +43,8 @@ class ProfileBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
+                  const SizedBox(height: 3),
+                  if (user.bio != null && user.bio!.isNotEmpty) Row(
                     children: [
                       Expanded(
                         child: UserInfoCard(
@@ -57,23 +55,22 @@ class ProfileBody extends StatelessWidget {
                             size: 24,
                           ),
                           infoTitle: 'Address',
-                          infoValue: user.bio?.toString() ?? "Please update your Address.",
+                          infoValue: user.bio,
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 3),
                   // Adding the streaming functionality for GeyserSwitch linking info
                   Consumer<ConnectionLinkProvider>(
                     builder: (context, connectionLinkProvider, child) {
                       String displayTime = 'loading'; // Default value if updateTime is null or too short
 
                       // Check if updateTime is not null and long enough
-                      if (connectionLinkProvider.updateTime != null &&
-                          connectionLinkProvider.updateTime.length > 3) {
+                      if (connectionLinkProvider.updateTime.length > 3) {
                         displayTime =
-                        '${connectionLinkProvider.updateTime.substring(0, connectionLinkProvider.updateTime.length - 3)} \n${connectionLinkProvider.updateDate}';
+                        'Time: ${connectionLinkProvider.updateTime.substring(0, connectionLinkProvider.updateTime.length - 3)} \nDate: ${connectionLinkProvider.updateDate}';
                       }
-
                       return Row(
                         children: [
                           Expanded(
@@ -85,7 +82,7 @@ class ProfileBody extends StatelessWidget {
                                 size: 24,
                               ),
                               infoValue: displayTime,
-                              infoTitle: 'Last Update ',
+                              infoTitle: 'Unit Last Update ',
                             ),
                           ),
                         ],

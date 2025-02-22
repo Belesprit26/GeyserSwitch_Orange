@@ -10,14 +10,14 @@ class PageContent extends Equatable {
 
   const PageContent.first()
       : this(
-          image: MediaRes.gs_Logo2,
-          title: 'Welcome to GeyserSwitch Orange',
+          image: MediaRes.gs_Logo,
+          title: 'Welcome to GeyserSwitch',
           description:
-              'This is the first user friendly, user first energy management tool'
-              " of it's kind - we hope you enjoy our offering.",
+          "Welcome to the family! GeyserSwitch is a first-of-its-kind energy management tool created with you in mind. "
+              "We’re thrilled to have you with us and can’t wait for you to explore everything we’ve prepared just for you."
         );
 
-  const PageContent.second()
+/*  const PageContent.second()
       : this(
           image: MediaRes.gs_Logo2,
           title: 'Features available to you today',
@@ -36,7 +36,7 @@ class PageContent extends Equatable {
               '3) Connect to the GeyserSwitchConnect hotspot.\n'
               '4) Enter your WiFi details, Email & Password credentials used in your registration here and your given User-ID.\n\n'
               "That's it! Enjoy...",
-        );
+        );*/
 
   final String image;
   final String title;

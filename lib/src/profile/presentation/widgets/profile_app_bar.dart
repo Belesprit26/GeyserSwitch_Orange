@@ -9,14 +9,13 @@ import 'package:gs_orange/src/profile/presentation/views/edit_profile_view.dart'
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconly/iconly.dart';
 
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ProfileAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AppBar(forceMaterialTransparency: true,
       title: const Text(
         'My Profile',
         style: TextStyle(
@@ -81,7 +80,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                 unawaited(
                   navigator.pushNamedAndRemoveUntil(
                     '/',
-                    (route) => false,
+                        (route) => false,
                   ),
                 );
               },

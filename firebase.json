@@ -1,1 +1,23 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"geyserswitch-bloc","appId":"1:945487010136:android:45be5f8f0faab7dc50ad2d","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"geyserswitch-bloc","appId":"1:945487010136:ios:167b7c5fb5d853fd50ad2d","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"geyserswitch-bloc","configurations":{"android":"1:945487010136:android:45be5f8f0faab7dc50ad2d","ios":"1:945487010136:ios:167b7c5fb5d853fd50ad2d","web":"1:945487010136:web:e8a4a59dc40813b550ad2d"}}}}}}
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

@@ -20,8 +20,8 @@ class UserInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: extraWidget != null ? 120 : 90,  // Adjust height if extraWidget is present
-      width: 60,
+      height: extraWidget != null ? 90 : 70,  // Adjust height if extraWidget is present
+      width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFFE4E6EA)),
         borderRadius: BorderRadius.circular(20),
@@ -34,9 +34,9 @@ class UserInfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 9.0),
+                  padding: const EdgeInsets.only(left: 6.0),
                   child: Container(
-                    height: 40,
+                    height: 35,
                     width: 40,
                     decoration: BoxDecoration(
                       color: infoThemeColour,

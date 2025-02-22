@@ -19,6 +19,17 @@ class TimerProvider extends ChangeNotifier {
     "18:00": false,
   };
 
+  List<String> getActiveTimers() {
+    List<String> activeTimers = [];
+    if (is4AM) activeTimers.add("04:00");
+    if (is6AM) activeTimers.add("06:00");
+    if (is8AM) activeTimers.add("08:00");
+    if (is4PM) activeTimers.add("16:00");
+    if (is6PM) activeTimers.add("18:00");
+    return activeTimers;
+  }
+
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
 

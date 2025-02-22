@@ -35,7 +35,7 @@ class _WiFiConfigPageState extends State<WiFiConfigPage> {
       final user = userProvider.user;
 
       if (user != null) {
-        _emailController.text = user.email ?? '';
+        _emailController.text = user.email;
       }
     });
   }

@@ -26,6 +26,5 @@ class LoadSheddingLoadFailure extends LoadSheddingState {
 
   const LoadSheddingLoadFailure(this.message);
 
-  @override
   List<Object?> get prope => [message];
 }

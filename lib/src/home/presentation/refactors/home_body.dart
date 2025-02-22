@@ -41,21 +41,59 @@ class _HomeBodyState extends State<HomeBody> {
       stream: _temperatureStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return DisplayCard(
-            value: 0, // Placeholder value for loading state
+          return const DisplayCard(
+            value: 0,
             unit: 'Celsius',
-            isLoading: true, // Show loading indicator
+            isLoading: true,
           );
         }
 
         if (!snapshot.hasData ||
             snapshot.data == null ||
             snapshot.data!.snapshot.value == null) {
-          return const Text('No data available');
+          return const DisplayCard(
+            value: 0,
+            unit: 'No data',
+            isLoading: false,
+          );
         }
 
-        double temperature =
-        (snapshot.data!.snapshot.value as num).toDouble();
+        // Safely handle the data conversion
+        double temperature;
+        try {
+          final value = snapshot.data!.snapshot.value;
+          if (value is num) {
+            temperature = value.toDouble();
+          } else if (value is Map) {
+            // Handle case where value is a map
+            return const DisplayCard(
+              value: 0,
+              unit: 'Celsius',
+              isLoading: false,
+            );
+          } else {
+            // Handle any other unexpected data type
+            return const DisplayCard(
+              value: 0,
+              unit: 'Celsius',
+              isLoading: false,
+            );
+          }
+        } catch (e) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'Celsius',
+            isLoading: false,
+          );
+        }
+
+        if (temperature == -127) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'Disconnected',
+            isLoading: false,
+          );
+        }
 
         return GestureDetector(
           onTap: () {
@@ -67,7 +105,7 @@ class _HomeBodyState extends State<HomeBody> {
           child: DisplayCard(
             value: temperature,
             unit: 'Celsius',
-            isLoading: false, // Data is available, no loading indicator
+            isLoading: false,
           ),
         );
       },

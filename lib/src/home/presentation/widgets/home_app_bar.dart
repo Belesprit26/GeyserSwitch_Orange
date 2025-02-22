@@ -38,47 +38,52 @@ class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.white,
+      forceMaterialTransparency: true,
       title: Consumer<UserProvider>(
         builder: (_, provider, __) {
           final user = provider.user;
 
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Profile Image
-              AssetImageWidget(
-                imagePath: 'assets/images/GS_EC1.png',
-                width: 60,
-                height: 60,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(width: 15),
-              // Name and Greeting
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user?.fullName ?? 'No User',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 21,
-                      ),
-                    ),
-                    Text(
-                      'Good ${TimeHelper.getTimeOfTheDay()} ${user?.fullName.split(' ').first ?? ''}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Profile Image
+                AssetImageWidget(
+                  imagePath: 'assets/images/GS_EC1.png',
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.contain,
                 ),
-              ),
-            ],
+                const SizedBox(width: 15),
+                // Name and Greeting
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user?.fullName ?? 'No User',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 21,
+                        ),
+                      ),
+                      Text(
+                        'Good ${TimeHelper.getTimeOfTheDay()} ${user?.fullName.split(' ').first ?? ''}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -133,6 +138,5 @@ class _HomeAppBarState extends State<HomeAppBar> {
     );
   }
 
-  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

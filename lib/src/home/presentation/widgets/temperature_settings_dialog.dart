@@ -94,10 +94,9 @@ class _TempSettingDialogState extends State<TempSettingDialog>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "${widget.geyser.name} Temperature Setting",
+              "${widget.geyser.name} - Max Temperature",
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
             SfRadialGauge(
               axes: <RadialAxis>[
                 RadialAxis(
@@ -135,7 +134,6 @@ class _TempSettingDialogState extends State<TempSettingDialog>
                 ),
               ],
             ),
-            const SizedBox(height: 20),
             Slider(
               activeColor: Colours.primaryOrange.withOpacity(0.9),
               value: _maxTemp,
@@ -154,17 +152,30 @@ class _TempSettingDialogState extends State<TempSettingDialog>
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            _updateTemp(
-              _maxTemp,
-              "Temperature settings for ${widget.geyser.name} successfully updated to ${_maxTemp.toStringAsFixed(1)}°C",
-            );
-          },
-          child: Text(
-            "Set Temperature",
-            style: TextStyle(color: Colours.primaryColour),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(textAlign: TextAlign.left,
+              "Cancel",
+              style: TextStyle(color: Colours.redColour),
+            ),
           ),
+          TextButton(
+            onPressed: () {
+              _updateTemp(
+                _maxTemp,
+                "Temperature settings for ${widget.geyser.name} successfully updated to ${_maxTemp.toStringAsFixed(1)}°C",
+              );
+            },
+            child: Text(
+              "Set",
+              style: TextStyle(color: Colours.primaryColour),
+            ),
+          ),
+        ],
         ),
       ],
     );

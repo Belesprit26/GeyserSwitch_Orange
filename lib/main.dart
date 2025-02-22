@@ -18,20 +18,18 @@ import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/tim
 import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
-Future<void> _firebaseBackgroundHanlder(RemoteMessage message)async{
-  await Firebase.initializeApp(
-    name: "GeyserSwitch-Orange",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
+  await Firebase.initializeApp();
   print("Handling a background message: ${message.messageId}");
 }
-Future<void> main() async {
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       name: "GeyserSwitch-Orange",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHanlder);
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
   FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
   await init();
   runApp(const MyApp());
@@ -61,6 +59,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: Fonts.poppins,
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             color: Colors.transparent,
           ),
