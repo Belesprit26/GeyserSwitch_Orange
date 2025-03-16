@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/utils/constants.dart';
 import 'package:http/http.dart' as http;
@@ -47,19 +45,5 @@ class LoadSheddingRemoteDataSourceImpl extends LoadSheddingRemoteDataSource {
       print(response.reasonPhrase);
       throw ServersException();
     }
-    if (response.statusCode == 200) {
-      return LoadSheddingModel.fromJson(
-          json.decode(json.encode(response.stream.toString())));
-    } else {
-      throw ServersException();
-    }
-/*return LoadSheddingModel.fromJson(
-          json.decode(json.encode(response.stream.toString())));*/
-    ///////////////////////////
-
-    final jresponse = await client
-        .get(Uri.parse(Urls.currentStageByName(cityName)), headers: headers);
-
-    // var data = await json.decode(json.encode(response.body));
   }
 }

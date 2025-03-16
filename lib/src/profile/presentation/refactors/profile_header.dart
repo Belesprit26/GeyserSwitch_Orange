@@ -1,9 +1,31 @@
-import 'package:gs_orange/core/common/app/providers/user_provider.dart';
-import 'package:gs_orange/core/extensions/context_extension.dart';
-import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/core/res/media_res.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+
+class AssetImageWidget extends StatelessWidget {
+  final String imagePath;
+  final double width;
+  final double height;
+  final BoxFit fit;
+
+  const AssetImageWidget({
+    Key? key,
+    required this.imagePath,
+    required this.width,
+    required this.height,
+    this.fit = BoxFit.cover,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      imagePath,
+      width: width,
+      height: height,
+      fit: fit,
+    );
+  }
+}
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -13,40 +35,52 @@ class ProfileHeader extends StatelessWidget {
     return Consumer<UserProvider>(
       builder: (_, provider, __) {
         final user = provider.user;
-        final image = user?.profilePic == null || user!.profilePic!.isEmpty
-            ? null
-            : user.profilePic;
-        return Column(
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: image != null
-                  ? NetworkImage(image)
-                  : const AssetImage(MediaRes.user) as ImageProvider,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              user?.fullName ?? 'No User',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
-            ),
-            if (user?.bio != null && user!.bio!.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.width * .15,
-                ),
-                child: Text(
-                  user.bio!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colours.neutralTextColour,
-                  ),
+            ClipOval(
+              child: Container(
+                width: 72,
+                height: 72,
+                color: Colors.transparent,
+                child: AssetImageWidget(
+                  imagePath: 'assets/images/GS_EC1.png',
+                  width: 72,
+                  height: 72,
+                  fit: BoxFit.contain,
+                  key: const ValueKey('AssetImage'),
                 ),
               ),
-            ],
-            const SizedBox(height: 16),
+            ),
+            const SizedBox(width: 16),
+
+            // Name and Bio
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user?.fullName ?? 'User Not Registered',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 21,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6.0),
+                    child: Text(
+                      'GeyserSwitch User',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },

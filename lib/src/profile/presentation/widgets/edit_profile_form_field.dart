@@ -8,12 +8,14 @@ class EditProfileFormField extends StatelessWidget {
     super.key,
     this.hintText,
     this.readOnly = false,
+    this.obscureText = false,
   });
 
   final String fieldTitle;
   final TextEditingController controller;
   final String? hintText;
   final bool readOnly;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {

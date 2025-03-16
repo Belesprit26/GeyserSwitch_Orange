@@ -10,6 +10,7 @@ import 'package:gs_orange/src/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 abstract class AuthRemoteDataSource {
   const AuthRemoteDataSource();
@@ -31,14 +32,21 @@ abstract class AuthRemoteDataSource {
     required UpdateUserAction action,
     dynamic userData,
   });
+
+  Future<bool> deleteUser({
+    required String password
+  });
 }
+
+
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   const AuthRemoteDataSourceImpl({
     required FirebaseAuth authClient,
     required FirebaseFirestore cloudStoreClient,
     required FirebaseStorage dbClient,
-  })  : _authClient = authClient,
+  })
+      : _authClient = authClient,
         _cloudStoreClient = cloudStoreClient,
         _dbClient = dbClient;
 
@@ -124,7 +132,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       await userCred.user?.updateDisplayName(fullName);
       await userCred.user?.updatePhotoURL(kDefaultAvatar);
+      
+      // Initialize user data in Firestore
       await _setUserData(_authClient.currentUser!, email);
+      
+      // Initialize sensor data in Realtime Database
+      final rtdb = FirebaseDatabase.instance.ref();
+      await rtdb
+          .child('GeyserSwitch')
+          .child(userCred.user!.uid)
+          .child('Geysers')
+          .child('geyser_1')
+          .child('sensor_1')
+          .set(0);
+        
     } on FirebaseAuthException catch (e) {
       throw ServerException(
         message: e.message ?? 'Error Occurred',
@@ -201,14 +222,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   Future<void> _setUserData(User user, String fallbackEmail) async {
     await _cloudStoreClient.collection('users').doc(user.uid).set(
-          LocalUserModel(
-            uid: user.uid,
-            email: user.email ?? fallbackEmail,
-            fullName: user.displayName ?? '',
-            profilePic: user.photoURL ?? '',
-            temperature: 0.0,
-          ).toMap(),
-        );
+      LocalUserModel(
+        uid: user.uid,
+        email: user.email ?? fallbackEmail,
+        fullName: user.displayName ?? '',
+        profilePic: user.photoURL ?? '',
+        temperature: 0.0,
+      ).toMap(),
+    );
   }
 
   Future<void> _updateUserData(DataMap data) async {
@@ -216,5 +237,62 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         .collection('users')
         .doc(_authClient.currentUser?.uid)
         .update(data);
+  }
+
+  @override
+  Future<bool> deleteUser({required String password}) async {
+    try {
+      final user = _authClient.currentUser;
+
+      if (user == null || user.email == null) {
+        throw const ServerException(
+          message: "No authenticated user found or email is missing.",
+          statusCode: "404"
+        );
+      }
+
+      try {
+        // Reauthenticate user before deletion
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: password
+        );
+        await user.reauthenticateWithCredential(credential);
+      } on FirebaseAuthException catch (e) {
+        throw ServerException(
+          message: e.message ?? "Failed to authenticate. Please check your password.",
+          statusCode: e.code
+        );
+      }
+
+      // Delete user data from Firestore
+      try {
+        await _cloudStoreClient.collection('users').doc(user.uid).delete();
+      } catch (e) {
+        throw ServerException(
+          message: "Failed to delete user data. Please try again.",
+          statusCode: "500"
+        );
+      }
+
+      // Delete user authentication account
+      try {
+        await user.delete();
+        return true; // Return true to indicate successful deletion
+      } on FirebaseAuthException catch (e) {
+        throw ServerException(
+          message: e.message ?? "Failed to delete account.",
+          statusCode: e.code
+        );
+      }
+
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(
+        message: e.toString(),
+        statusCode: "500"
+      );
+    }
   }
 }

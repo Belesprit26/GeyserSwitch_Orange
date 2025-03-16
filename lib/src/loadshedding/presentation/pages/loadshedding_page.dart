@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs_orange/src/loadshedding/presentation/bloc/loadshedding_bloc.dart';
 import 'package:gs_orange/src/loadshedding/presentation/bloc/loadshedding_state.dart';
-import 'package:intl/intl.dart';
-
-import '../../../../core/utils/constants.dart';
 import '../bloc/loadshedding_event.dart';
 
 class LoadSheddingPage extends StatelessWidget {

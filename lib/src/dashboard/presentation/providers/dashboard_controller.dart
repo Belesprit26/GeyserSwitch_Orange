@@ -2,7 +2,6 @@ import 'package:gs_orange/core/common/app/providers/tab_navigator.dart';
 import 'package:gs_orange/core/common/views/persistent_view.dart';
 import 'package:gs_orange/src/home/presentation/views/home_view.dart';
 import 'package:gs_orange/src/timers/presentation/views/timers_view.dart';
-import 'package:gs_orange/src/loadshedding/presentation/pages/loadshedding_page.dart';
 import 'package:gs_orange/src/profile/presentation/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

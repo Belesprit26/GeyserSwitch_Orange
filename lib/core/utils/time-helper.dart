@@ -1,10 +1,10 @@
 class TimeHelper {
   static String getTimeOfTheDay() {
     DateTime time = DateTime.now();
-    if (time.hour >= 6 && time.hour < 12) return "Morning,";
+    if (time.hour >= 5 && time.hour < 12) return "Morning,";
     if (time.hour >= 12 && time.hour < 18) return "Afternoon,";
     if (time.hour >= 18 && time.hour < 23) return "Evening,";
-    if (time.hour >= 00 && time.hour < 6) return "Day,";
+    if (time.hour >= 00 && time.hour < 5) return "Morning,";
     return "Day,";
   }
 }
@@ -16,6 +16,7 @@ class TimeHelper2 {
     if (time.hour >= 18 && time.hour < 23) return "Night time";
     if (time.hour >= 6 && time.hour < 12) return "Morning";
     if (time.hour >= 12 && time.hour < 18) return "Afternoon";
+    if (time.hour >= 18 && time.hour < 00) return "Evening,";
     return "Early Morning";
   }
 }

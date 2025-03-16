@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:gs_orange/core/errors/failures.dart';
 
 class ServerException extends Equatable implements Exception {
   const ServerException({required this.message, required this.statusCode});

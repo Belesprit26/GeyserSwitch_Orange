@@ -16,8 +16,8 @@ class OnBoardingBody extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(pageContent.image, height: context.height * .4),
-        SizedBox(height: context.height * .03),
+        Image.asset(pageContent.image, height: context.height * .3, width: context.width *.8,),
+        SizedBox(height: context.height * .01),
         Padding(
           padding: const EdgeInsets.all(20).copyWith(bottom: 0),
           child: Column(

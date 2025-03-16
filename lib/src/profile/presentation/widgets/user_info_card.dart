@@ -6,119 +6,74 @@ class UserInfoCard extends StatelessWidget {
     required this.infoThemeColour,
     required this.infoIcon,
     required this.infoTitle,
-    required this.infoValue,
+    this.infoValue,  // Nullable infoValue field
+    this.extraWidget,  // Nullable extraWidget field
     super.key,
   });
 
   final Color infoThemeColour;
   final Widget infoIcon;
   final String infoTitle;
-  final String infoValue;
+  final String? infoValue;  // Nullable infoValue
+  final Widget? extraWidget;  // Nullable extraWidget field
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 84,
-      width: 156,
+      height: extraWidget != null ? 90 : 70,  // Adjust height if extraWidget is present
+      width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFFE4E6EA)),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Center(
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                color: infoThemeColour,
-                shape: BoxShape.circle,
-              ),
-              child: Center(child: infoIcon),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  infoTitle,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                SelectableText(
-                  infoValue,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Container(
+                    height: 35,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: infoThemeColour,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: infoIcon),
                   ),
-                  onTap: () {
-                    CoreUtils.showSnackBar(
-                        context, 'Your UID has been copied: $infoValue');
-                  },
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UserInfoCard2 extends StatelessWidget {
-  const UserInfoCard2({
-    required this.infoThemeColour,
-    required this.infoIcon,
-    required this.infoTitle,
-    required this.infoValue,
-    super.key,
-  });
-
-  final Color infoThemeColour;
-  final Widget infoIcon;
-  final String infoTitle;
-  final String infoValue;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 84,
-      width: 156,
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFE4E6EA)),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: 30,
-              width: 40,
-              decoration: BoxDecoration(
-                color: infoThemeColour,
-                shape: BoxShape.circle,
-              ),
-              child: Center(child: infoIcon),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  infoTitle,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                Text(
-                  infoValue,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      overflow: TextOverflow.ellipsis),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        infoTitle,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      if (extraWidget != null) ...[
+                        extraWidget!,
+                      ],
+                      if (infoValue != null) ...[
+                        SelectableText(
+                          infoValue!,  // Fallback if infoValue is null
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                          onTap: () {
+                            CoreUtils.showSnackBar(
+                                context, 'Click on the 3 dots to edit your details.');
+                          },
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ],
             ),

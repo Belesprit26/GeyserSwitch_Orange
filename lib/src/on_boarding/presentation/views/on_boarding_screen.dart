@@ -52,15 +52,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   controller: pageController,
                   children: const [
                     OnBoardingBody(pageContent: PageContent.first()),
-                    OnBoardingBody(pageContent: PageContent.second()),
-                    OnBoardingBody(pageContent: PageContent.third()),
+                    //OnBoardingBody(pageContent: PageContent.second()),
+                   // OnBoardingBody(pageContent: PageContent.third()),
                   ],
                 ),
                 Align(
                   alignment: const Alignment(0, .04),
                   child: SmoothPageIndicator(
                     controller: pageController,
-                    count: 3,
+                    count: 0,
                     onDotClicked: (index) {
                       pageController.animateToPage(
                         index,

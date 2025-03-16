@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
@@ -11,22 +11,31 @@ import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_control
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
+import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart';
+import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
+import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
-Future<void> main() async {
+@pragma('vm:entry-point')
+Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
+  await Firebase.initializeApp();
+  print("Handling a background message: ${message.messageId}");
+}
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: "GeyserSwitch Orange",
+      name: "GeyserSwitch-Orange",
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
   FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
   await init();
-  //PushNotifications.init();
-  //Listen to Background Notifications
-  // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
   runApp(const MyApp());
   DependencyInjection.init();
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -37,14 +46,20 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DashboardController()),
-        //BlocProvider(create: (_) => sl<LoadSheddingBloc>()),
+        ChangeNotifierProvider(create: (_) => HomeButtonProvider()),
+        ChangeNotifierProvider(create: (_) => TimerProvider()),
+        ChangeNotifierProvider(create: (_) => CustomTimerProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectionLinkProvider(),
+        ),
       ],
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'GeyserSwitch Orange',
         theme: ThemeData(
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: Fonts.poppins,
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             color: Colors.transparent,
           ),
@@ -52,6 +67,13 @@ class MyApp extends StatelessWidget {
             accentColor: Colours.primaryColour,
           ),
         ),
+        builder: (context, child) {
+          // Add the MediaQuery to disable text scaling
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: child!,
+          );
+        },
         onGenerateRoute: generateRoute,
       ),
     );

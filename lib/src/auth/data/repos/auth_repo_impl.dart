@@ -69,4 +69,16 @@ class AuthRepoImpl implements AuthRepo {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
     }
   }
+
+  @override
+  ResultFuture<void> deleteUser({required String password}) async {  // Named parameter
+    try {
+      await _remoteDataSource.deleteUser(password: password); // Named parameter usage
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString(), statusCode: '500'));
+    }
+  }
 }

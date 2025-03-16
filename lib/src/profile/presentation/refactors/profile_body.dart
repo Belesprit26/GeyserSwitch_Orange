@@ -1,11 +1,10 @@
-import 'package:flutter/services.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/core/res/media_res.dart';
 import 'package:gs_orange/src/profile/presentation/widgets/user_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:provider/provider.dart';
+import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart'; // Assuming this is where your ConnectionLinkProvider is
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({super.key});
@@ -15,50 +14,23 @@ class ProfileBody extends StatelessWidget {
     return Consumer<UserProvider>(
       builder: (_, provider, __) {
         final user = provider.user;
-        String _copy = user!.uid.toString();
+        user!.uid.toString();
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /*Row(
-              children: [
-                Expanded(
-                  child: UserInfoCard(
-                    infoThemeColour: Colours.biologyTileColour,
-                    infoIcon: const Icon(
-                      IconlyLight.user,
-                      color: Color(0xFF56AEFF),
-                      size: 24,
-                    ),
-                    infoTitle: 'Savings ave',
-                    infoValue: user.temperature.toString(),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: UserInfoCard(
-                    infoThemeColour: Colours.chemistryTileColour,
-                    infoIcon: const Icon(
-                      IconlyLight.user,
-                      color: Color(0xFFFF84AA),
-                      size: 24,
-                    ),
-                    infoTitle: 'Total Savings',
-                    infoValue: user.temperature.toString(),
-                  ),
-                ),
-              ],
-            ),*/
             const SizedBox(height: 30),
             Center(
               child: Column(
                 children: [
-                  Text('My Unit info',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 21)),
+                  const Text(
+                    'My Unit info',
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 21),
+                  ),
                   Row(
                     children: [
                       Expanded(
-                        child: UserInfoCard2(
+                        child: UserInfoCard(
                           infoThemeColour: Colours.neutralTextColour,
                           infoIcon: const Icon(
                             IconlyLight.message,
@@ -71,21 +43,51 @@ class ProfileBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
+                  const SizedBox(height: 3),
+                  if (user.bio != null && user.bio!.isNotEmpty) Row(
                     children: [
                       Expanded(
-                        child: UserInfoCard2(
+                        child: UserInfoCard(
                           infoThemeColour: Colours.neutralTextColour,
                           infoIcon: const Icon(
-                            IconlyLight.shield_done,
+                            IconlyLight.location,
                             color: Colors.white,
                             size: 24,
                           ),
-                          infoTitle: 'Unit User ID',
-                          infoValue: user.uid.toString(),
+                          infoTitle: 'Address',
+                          infoValue: user.bio,
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 3),
+                  // Adding the streaming functionality for GeyserSwitch linking info
+                  Consumer<ConnectionLinkProvider>(
+                    builder: (context, connectionLinkProvider, child) {
+                      String displayTime = 'loading'; // Default value if updateTime is null or too short
+
+                      // Check if updateTime is not null and long enough
+                      if (connectionLinkProvider.updateTime.length > 3) {
+                        displayTime =
+                        'Time: ${connectionLinkProvider.updateTime.substring(0, connectionLinkProvider.updateTime.length - 3)} \nDate: ${connectionLinkProvider.updateDate}';
+                      }
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: UserInfoCard(
+                              infoThemeColour: Colours.neutralTextColour,
+                              infoIcon: const Icon(
+                                IconlyLight.time_square,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              infoValue: displayTime,
+                              infoTitle: 'Unit Last Update ',
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

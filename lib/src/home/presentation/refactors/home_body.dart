@@ -1,66 +1,114 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:gs_orange/core/common/app/providers/user_provider.dart';
-import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/src/home/presentation/widgets/alert_popup.dart';
+import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
 import 'package:gs_orange/src/home/presentation/widgets/display_card.dart';
-import 'package:provider/provider.dart';
+import 'package:gs_orange/src/home/presentation/widgets/temperature_settings_dialog.dart';
 
-class HomeBody extends StatelessWidget {
-  const HomeBody({Key? key}) : super(key: key);
+class HomeBody extends StatefulWidget {
+  final Geyser geyser;
+
+  const HomeBody({Key? key, required this.geyser}) : super(key: key);
+
+  @override
+  _HomeBodyState createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  late Stream<DatabaseEvent> _temperatureStream;
+  final _firebaseAuth = FirebaseAuth.instance;
+  late String _userID;
+
+  @override
+  void initState() {
+    super.initState();
+    // Get the userID from FirebaseAuth
+    _userID = _firebaseAuth.currentUser!.uid;
+
+    // Initialize the temperature stream
+    _temperatureStream = _firebaseDB
+        .child(_userID)
+        .child("Geysers")
+        .child(widget.geyser.id)
+        .child(widget.geyser.sensorKey)
+        .onValue;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(builder: (_, provider, __) {
-      final user = provider.user;
-      return Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * .3,
-            height: MediaQuery.of(context).size.height * .05,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.white70,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade400.withOpacity(0.3),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                ),
-              ],
-            ),
-            child: FittedBox(
-              child: FloatingActionButton.extended(
-                splashColor: Colours.primaryOrange,
-                label: Text(
-                  "Max Temp",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 21,
-                      color: Colors.black),
-                ),
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialogPopUp(),
-                ),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-              ),
-            ),
+    return StreamBuilder<DatabaseEvent>(
+      stream: _temperatureStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'Celsius',
+            isLoading: true,
+          );
+        }
+
+        if (!snapshot.hasData ||
+            snapshot.data == null ||
+            snapshot.data!.snapshot.value == null) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'No data',
+            isLoading: false,
+          );
+        }
+
+        // Safely handle the data conversion
+        double temperature;
+        try {
+          final value = snapshot.data!.snapshot.value;
+          if (value is num) {
+            temperature = value.toDouble();
+          } else if (value is Map) {
+            // Handle case where value is a map
+            return const DisplayCard(
+              value: 0,
+              unit: 'Celsius',
+              isLoading: false,
+            );
+          } else {
+            // Handle any other unexpected data type
+            return const DisplayCard(
+              value: 0,
+              unit: 'Celsius',
+              isLoading: false,
+            );
+          }
+        } catch (e) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'Celsius',
+            isLoading: false,
+          );
+        }
+
+        if (temperature == -127) {
+          return const DisplayCard(
+            value: 0,
+            unit: 'Disconnected',
+            isLoading: false,
+          );
+        }
+
+        return GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => TempSettingDialog(geyser: widget.geyser),
+            );
+          },
+          child: DisplayCard(
+            value: temperature,
+            unit: 'Celsius',
+            isLoading: false,
           ),
-          SizedBox(
-            height: 18,
-          ),
-          DisplayCard(
-            value: user!.temperature.toDouble(),
-            name: 'Temperature',
-            unit: ' °C',
-            assetImage: const AssetImage('assets/images/temperature_icon.png'),
-          ),
-        ],
-      );
-    });
+        );
+      },
+    );
   }
 }

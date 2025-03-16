@@ -1,5 +1,6 @@
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
+import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 import 'package:gs_orange/src/auth/data/models/user_model.dart';
 import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:gs_orange/src/dashboard/presentation/utils/dashboard_utils.dart';
@@ -18,13 +19,24 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  @override
+  final NotificationService _notificationService = NotificationService();
+
   void initState() {
     super.initState();
+    _initializeNotifications();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  void _initializeNotifications() {
+    NotificationService.requestNotificationPermissions(context).then((_) {
+      _notificationService.getDeviceToken().then((_) {
+        _notificationService.initLocalNotifications(context);
+        _notificationService.firebaseInit(context);
+      });
+    });
   }
 
   @override
@@ -38,67 +50,76 @@ class _DashboardState extends State<Dashboard> {
         return Consumer<DashboardController>(
           builder: (_, controller, __) {
             return Scaffold(
+              backgroundColor: Colors.white,
               body: IndexedStack(
                 index: controller.currentIndex,
                 children: controller.screens,
               ),
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: controller.currentIndex,
-                showSelectedLabels: false,
-                backgroundColor: Colors.white,
-                elevation: 8,
-                onTap: controller.changeIndex,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      controller.currentIndex == 0
-                          ? IconlyBold.home
-                          : IconlyLight.home,
-                      color: controller.currentIndex == 0
-                          ? Colours.primaryColour
-                          : Colors.grey,
-                    ),
-                    label: 'Home',
-                    backgroundColor: Colors.white,
+              bottomNavigationBar:
+              Padding(
+                padding: const EdgeInsets.all(9),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30.0), // Rounded edges
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26, // Shadow color
+                        blurRadius: 10, // Shadow blur radius
+                        offset: Offset(0, 4), // Shadow position
+                      ),
+                    ],
                   ),
-                  //Eskom Feature
-                  /*BottomNavigationBarItem(
-                    icon: Icon(
-                      controller.currentIndex == 1
-                          ? IconlyBold.document
-                          : IconlyLight.document,
-                      color: controller.currentIndex == 1
-                          ? Colours.primaryColour
-                          : Colors.grey,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30.0),
+                    child: BottomNavigationBar(
+                      selectedItemColor: Colors.black,
+                      currentIndex: controller.currentIndex,
+                      showSelectedLabels: true,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      onTap: controller.changeIndex,
+                      items: [
+                        BottomNavigationBarItem(
+                          icon: Icon(
+                            controller.currentIndex == 0
+                                ? IconlyBold.home
+                                : IconlyLight.home,
+                            color: controller.currentIndex == 0
+                                ? Colours.primaryColour
+                                : Colors.grey,
+                          ),
+                          label: 'Home',
+                          backgroundColor: Colors.white,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(
+                            controller.currentIndex == 1
+                                ? IconlyBold.time_square
+                                : IconlyLight.time_square,
+                            color: controller.currentIndex == 1
+                                ? Colours.primaryColour
+                                : Colors.grey,
+                          ),
+                          label: 'Timers',
+                          backgroundColor: Colors.white,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(
+                            controller.currentIndex == 2
+                                ? IconlyBold.profile
+                                : IconlyLight.profile,
+                            color: controller.currentIndex == 2
+                                ? Colours.primaryColour
+                                : Colors.grey,
+                          ),
+                          label: 'User',
+                          backgroundColor: Colors.white,
+                        ),
+                      ],
                     ),
-                    label: 'Materials',
-                    backgroundColor: Colors.white,
-                  ),*/
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      controller.currentIndex == 1
-                          ? IconlyBold.time_square
-                          : IconlyLight.time_square,
-                      color: controller.currentIndex == 1
-                          ? Colours.primaryColour
-                          : Colors.grey,
-                    ),
-                    label: 'Timers',
-                    backgroundColor: Colors.white,
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      controller.currentIndex == 2
-                          ? IconlyBold.profile
-                          : IconlyLight.profile,
-                      color: controller.currentIndex == 2
-                          ? Colours.primaryColour
-                          : Colors.grey,
-                    ),
-                    label: 'User',
-                    backgroundColor: Colors.white,
-                  ),
-                ],
+                ),
               ),
             );
           },

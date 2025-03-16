@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:gs_orange/core/common/widgets/gradient_background.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:gs_orange/core/common/widgets/nested_back_button.dart';
 import 'package:gs_orange/core/enums/update_user.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
-import 'package:gs_orange/core/res/media_res.dart';
 import 'package:gs_orange/core/utils/core_utils.dart';
 import 'package:gs_orange/src/auth/presentation/bloc/auth_bloc.dart';
+import 'package:gs_orange/src/home/presentation/widgets/asset_image_widget.dart';
 import 'package:gs_orange/src/profile/presentation/widgets/edit_profile_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -27,17 +25,6 @@ class _EditProfileViewState extends State<EditProfileView> {
   final bioController = TextEditingController();
   final oldPasswordController = TextEditingController();
 
-  File? pickedImage;
-
-  Future<void> pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        pickedImage = File(image.path);
-      });
-    }
-  }
-
   bool get nameChanged =>
       context.currentUser?.fullName.trim() != fullNameController.text.trim();
 
@@ -48,14 +35,8 @@ class _EditProfileViewState extends State<EditProfileView> {
   bool get bioChanged =>
       context.currentUser?.bio?.trim() != bioController.text.trim();
 
-  bool get imageChanged => pickedImage != null;
-
   bool get nothingChanged =>
-      !nameChanged &&
-      !emailChanged &&
-      !passwordChanged &&
-      !bioChanged &&
-      !imageChanged;
+      !nameChanged && !emailChanged && !passwordChanged && !bioChanged;
 
   @override
   void initState() {
@@ -83,154 +64,110 @@ class _EditProfileViewState extends State<EditProfileView> {
           context.pop();
         } else if (state is AuthError) {
           CoreUtils.showSnackBar(context, state.message);
+        } else if (state is UserDeleted) {
+          CoreUtils.showSnackBar(context, 'Account and Data successfully deleted');
+          Navigator.of(context).pushNamedAndRemoveUntil('/sign-in', (route) => false);
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            leading: const NestedBackButton(),
-            title: const Text(
-              'Edit Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(forceMaterialTransparency: true,
+              leading: const NestedBackButton(),
+              title: const Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
+                ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  if (nothingChanged) context.pop();
-                  final bloc = context.read<AuthBloc>();
-                  if (passwordChanged) {
-                    if (oldPasswordController.text.isEmpty) {
-                      CoreUtils.showSnackBar(
-                        context,
-                        'Please enter your old password',
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (nothingChanged) context.pop();
+                    final bloc = context.read<AuthBloc>();
+                    if (passwordChanged) {
+                      if (oldPasswordController.text.isEmpty) {
+                        CoreUtils.showSnackBar(
+                          context,
+                          'Please enter your old password',
+                        );
+                        return;
+                      }
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.password,
+                          userData: jsonEncode({
+                            'oldPassword': oldPasswordController.text.trim(),
+                            'newPassword': passwordController.text.trim(),
+                          }),
+                        ),
                       );
-                      return;
                     }
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.password,
-                        userData: jsonEncode({
-                          'oldPassword': oldPasswordController.text.trim(),
-                          'newPassword': passwordController.text.trim(),
-                        }),
-                      ),
-                    );
-                  }
-                  if (nameChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.displayName,
-                        userData: fullNameController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (emailChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.email,
-                        userData: emailController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (bioChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.bio,
-                        userData: bioController.text.trim(),
-                      ),
-                    );
-                  }
-                  if (imageChanged) {
-                    bloc.add(
-                      UpdateUserEvent(
-                        action: UpdateUserAction.profilePic,
-                        userData: pickedImage,
-                      ),
-                    );
-                  }
-                },
-                child: state is AuthLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : StatefulBuilder(
-                        builder: (_, refresh) {
-                          fullNameController.addListener(() => refresh(() {}));
-                          bioController.addListener(() => refresh(() {}));
-                          emailController.addListener(() => refresh(() {}));
-                          passwordController.addListener(() => refresh(() {}));
-                          return Text(
-                            'Done',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: nothingChanged
-                                  ? Colors.grey
-                                  : Colors.blueAccent,
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
-          body: GradientBackground(
-            image: MediaRes.profileGradientBackground,
-            child: ListView(
+                    if (nameChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.displayName,
+                          userData: fullNameController.text.trim(),
+                        ),
+                      );
+                    }
+                    if (emailChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.email,
+                          userData: emailController.text.trim(),
+                        ),
+                      );
+                    }
+                    if (bioChanged) {
+                      bloc.add(
+                        UpdateUserEvent(
+                          action: UpdateUserAction.bio,
+                          userData: bioController.text.trim(),
+                        ),
+                      );
+                    }
+                  },
+                  child: state is AuthLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : StatefulBuilder(
+                    builder: (_, refresh) {
+                      fullNameController.addListener(() => refresh(() {}));
+                      bioController.addListener(() => refresh(() {}));
+                      emailController.addListener(() => refresh(() {}));
+                      passwordController.addListener(() => refresh(() {}));
+                      return Text(
+                        'Done',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: nothingChanged
+                              ? Colors.grey
+                              : Colors.blueAccent,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            body: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
-                Builder(
-                  builder: (context) {
-                    final user = context.currentUser!;
-                    final userImage =
-                        user.profilePic == null || user.profilePic!.isEmpty
-                            ? null
-                            : user.profilePic;
-                    return CircleAvatar(
-                      radius: 50,
-                      backgroundImage: pickedImage != null
-                          ? FileImage(pickedImage!)
-                          : userImage != null
-                              ? NetworkImage(userImage)
-                              : const AssetImage(MediaRes.user)
-                                  as ImageProvider,
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black.withOpacity(.5),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: pickImage,
-                            icon: Icon(
-                              (pickedImage != null || user.profilePic != null)
-                                  ? Icons.edit
-                                  : Icons.add_a_photo,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'We recommend an image of at least 400x400',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF777E90),
+                // Static Profile Image
+                ClipOval(
+                  child: Container(
+                    width: 129,
+                    height: 129,
+                    color: Colors.transparent,
+                    child: AssetImageWidget(
+                      imagePath: 'assets/images/GS_EC2.png',
+                      width: 129,
+                      height: 129,
+                      fit: BoxFit.contain,
+                      key: const ValueKey('AssetImage'),
                     ),
                   ),
                 ),
@@ -241,6 +178,77 @@ class _EditProfileViewState extends State<EditProfileView> {
                   emailController: emailController,
                   passwordController: passwordController,
                   oldPasswordController: oldPasswordController,
+                ),
+                const SizedBox(height: 30),
+                Baseline(
+                  baseline: 20,
+                  baselineType: TextBaseline.alphabetic,
+                  child: TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const Text("Delete Account"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text("Enter your password to confirm permanent data & account deletion."),
+                                const SizedBox(height: 10),
+                                TextField(
+                                  controller: oldPasswordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    labelText: "Password",
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(dialogContext);
+                                  final bloc = context.read<AuthBloc>();
+
+                                  if (oldPasswordController.text.isEmpty) {
+                                    CoreUtils.showSnackBar(context, "Please enter your password");
+                                    return;
+                                  }
+
+                                  bloc.add(DeleteUserEvent(oldPasswordController.text.trim()));
+                                },
+                                child: const Text(
+                                  "Delete",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text(
+                      'Delete account?',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
