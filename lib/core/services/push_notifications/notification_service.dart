@@ -6,15 +6,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
   // Firebase Messaging instance
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   // Flutter Local Notifications Plugin
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  // final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+  // FlutterLocalNotificationsPlugin();
 
   // Reference to the current user
   final User? _currentUser = FirebaseAuth.instance.currentUser;
@@ -119,28 +119,28 @@ class NotificationService {
 
   // Initialize local notifications
   void initLocalNotifications(BuildContext context) {
-    const AndroidInitializationSettings androidInitializationSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosInitializationSettings =
-    DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iosInitializationSettings,
-    );
-
-    _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        // Handle notification tap when the app is in the foreground
-        print('Notification tapped with payload: ${response.payload}');
-        // Open the app normally
-      },
-    );
+    // const AndroidInitializationSettings androidInitializationSettings =
+    // AndroidInitializationSettings('@mipmap/ic_launcher');
+    // const DarwinInitializationSettings iosInitializationSettings =
+    // DarwinInitializationSettings(
+    //   requestAlertPermission: true,
+    //   requestBadgePermission: true,
+    //   requestSoundPermission: true,
+    // );
+    //
+    // const InitializationSettings initializationSettings = InitializationSettings(
+    //   android: androidInitializationSettings,
+    //   iOS: iosInitializationSettings,
+    // );
+    //
+    // _flutterLocalNotificationsPlugin.initialize(
+    //   initializationSettings,
+    //   onDidReceiveNotificationResponse: (NotificationResponse response) {
+    //     // Handle notification tap when the app is in the foreground
+    //     print('Notification tapped with payload: ${response.payload}');
+    //     // Open the app normally
+    //   },
+    // );
   }
 
   // Set up Firebase messaging listeners
@@ -177,27 +177,27 @@ class NotificationService {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
 
-    if (notification != null && android != null) {
-      const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-        'high_importance_channel',
-        'High Importance Notifications',
-        channelDescription: 'This channel is used for important notifications.',
-        importance: Importance.max,
-        priority: Priority.high,
-      );
-
-      const NotificationDetails notificationDetails = NotificationDetails(
-        android: androidDetails,
-      );
-
-      await _flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        notificationDetails,
-        payload: 'Default_Sound',
-      );
-    }
+    // if (notification != null && android != null) {
+    //   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    //     'high_importance_channel',
+    //     'High Importance Notifications',
+    //     channelDescription: 'This channel is used for important notifications.',
+    //     importance: Importance.max,
+    //     priority: Priority.high,
+    //   );
+    //
+    //   const NotificationDetails notificationDetails = NotificationDetails(
+    //     android: androidDetails,
+    //   );
+    //
+    //   await _flutterLocalNotificationsPlugin.show(
+    //     notification.hashCode,
+    //     notification.title,
+    //     notification.body,
+    //     notificationDetails,
+    //     payload: 'Default_Sound',
+    //   );
+    // }
   }
 
   Future<void> sendNotification({

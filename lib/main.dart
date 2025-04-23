@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/res/fonts.dart';
-import 'package:gs_orange/core/services/dependency_injection.dart';
 import 'package:gs_orange/core/services/injection_container.dart';
 import 'package:gs_orange/core/services/router.dart';
 import 'package:gs_orange/firebase_options.dart';
@@ -17,6 +16,8 @@ import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provide
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'core/services/dependency_injection/injector.dart';
+
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
   await Firebase.initializeApp();
@@ -25,6 +26,7 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   await Firebase.initializeApp(
       name: "GeyserSwitch-Orange",
     options: DefaultFirebaseOptions.currentPlatform,
@@ -33,7 +35,6 @@ void main() async {
   FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
   await init();
   runApp(const MyApp());
-  DependencyInjection.init();
 }
 
 
