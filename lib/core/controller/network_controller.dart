@@ -1,8 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:injectable/injectable.dart';
+@LazySingleton()
 class NetworkController extends GetxController {
   final Connectivity _connectivity = Connectivity();
 
