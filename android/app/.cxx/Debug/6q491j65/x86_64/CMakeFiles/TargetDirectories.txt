@@ -1,0 +1,2 @@
+/Users/phiwo/work/GeyserSwitch/GeyserSwitch_Orange/android/app/.cxx/Debug/6q491j65/x86_64/CMakeFiles/edit_cache.dir
+/Users/phiwo/work/GeyserSwitch/GeyserSwitch_Orange/android/app/.cxx/Debug/6q491j65/x86_64/CMakeFiles/rebuild_cache.dir
