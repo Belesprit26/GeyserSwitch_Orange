@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,15 +6,19 @@ import 'package:get/get.dart';
 
 class NetworkController extends GetxController {
   final Connectivity _connectivity = Connectivity();
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
 
   @override
   void onInit() {
     super.onInit();
-    _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _subscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
-    if (connectivityResult == ConnectivityResult.none) {
+  void _updateConnectionStatus(List<ConnectivityResult> connectivityResults) {
+    final bool isOffline = connectivityResults.length == 1 &&
+        connectivityResults.contains(ConnectivityResult.none);
+    if (isOffline) {
       Get.rawSnackbar(
           messageText: const Text(
             'PLEASE CONNECT TO THE INTERNET',
@@ -34,5 +39,11 @@ class NetworkController extends GetxController {
         Get.closeCurrentSnackbar();
       }
     }
+  }
+
+  @override
+  void onClose() {
+    _subscription?.cancel();
+    super.onClose();
   }
 }

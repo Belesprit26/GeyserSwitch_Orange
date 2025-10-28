@@ -1,0 +1,2 @@
+/Users/bm/StudioProjects/GeyserSwitch_Orange/android/app/.cxx/Debug/3k2a4j4c/x86/CMakeFiles/edit_cache.dir
+/Users/bm/StudioProjects/GeyserSwitch_Orange/android/app/.cxx/Debug/3k2a4j4c/x86/CMakeFiles/rebuild_cache.dir
