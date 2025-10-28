@@ -52,3 +52,7 @@ ios/Pods/
 
 # Flutter build outputs (any module)
 **/build/
+
+# Android NDK intermediate outputs
+android/app/.cxx/
+android/.cxx/
