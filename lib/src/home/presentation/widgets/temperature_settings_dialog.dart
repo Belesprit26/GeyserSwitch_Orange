@@ -4,6 +4,7 @@ import 'package:gs_orange/core/utils/core_utils.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 import '../refactors/home_providers/presentation/geyser_entity.dart';
 
@@ -22,7 +23,7 @@ class _TempSettingDialogState extends State<TempSettingDialog>
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   late final User? _user;
   late final DatabaseReference _firebaseDB;
 

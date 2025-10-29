@@ -76,7 +76,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               onTap: () async {
                 final navigator = Navigator.of(context);
-                await FirebaseAuth.instance.signOut();
+                await sl<FirebaseAuth>().signOut();
                 unawaited(
                   navigator.pushNamedAndRemoveUntil(
                     '/',

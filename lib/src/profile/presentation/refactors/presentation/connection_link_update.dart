@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class ConnectionLinkProvider with ChangeNotifier {
   String updateDate = "";
   String updateTime = "";
   bool isLoading = true;
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
 
   ConnectionLinkProvider() {

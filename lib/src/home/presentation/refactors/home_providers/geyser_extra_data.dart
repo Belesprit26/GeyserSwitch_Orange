@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 import 'package:gs_orange/src/home/presentation/widgets/home_info_card.dart';
 import 'package:iconly/iconly.dart';
 import '../../../../../core/res/colours.dart';
@@ -10,7 +11,7 @@ class GeyserExtraDataWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = sl<FirebaseAuth>().currentUser;
     if (user == null) {
       return const Center(child: Text('No user is currently signed in.'));
     }

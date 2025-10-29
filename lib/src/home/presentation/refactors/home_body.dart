@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
 import 'package:gs_orange/src/home/presentation/widgets/display_card.dart';
 import 'package:gs_orange/src/home/presentation/widgets/temperature_settings_dialog.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class HomeBody extends StatefulWidget {
   final Geyser geyser;
@@ -17,7 +18,7 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
   late Stream<DatabaseEvent> _temperatureStream;
-  final _firebaseAuth = FirebaseAuth.instance;
+  final _firebaseAuth = sl<FirebaseAuth>();
   late String _userID;
 
   @override

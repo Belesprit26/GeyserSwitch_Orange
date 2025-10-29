@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class TimerProvider extends ChangeNotifier {
   var is4AM = false;
@@ -30,7 +31,7 @@ class TimerProvider extends ChangeNotifier {
   }
 
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
 
   TimerProvider() {

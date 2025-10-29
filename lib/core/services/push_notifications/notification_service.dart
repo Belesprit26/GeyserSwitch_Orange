@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class NotificationService {
   // Firebase Messaging instance
@@ -17,7 +18,7 @@ class NotificationService {
   FlutterLocalNotificationsPlugin();
 
   // Reference to the current user
-  final User? _currentUser = FirebaseAuth.instance.currentUser;
+  final User? _currentUser = sl<FirebaseAuth>().currentUser;
 
   // Reference to the database path for storing tokens
   late DatabaseReference databaseReference;
@@ -141,6 +142,9 @@ class NotificationService {
         // Open the app normally
       },
     );
+
+    // Ensure Android notification channel exists
+    _ensureAndroidHighImportanceChannel();
   }
 
   // Set up Firebase messaging listeners
@@ -198,6 +202,20 @@ class NotificationService {
         payload: 'Default_Sound',
       );
     }
+  }
+
+  // Create the high importance channel on Android (O+)
+  Future<void> _ensureAndroidHighImportanceChannel() async {
+    if (!Platform.isAndroid) return;
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      description: 'This channel is used for important notifications.',
+      importance: Importance.max,
+    );
+    final androidPlugin = _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    await androidPlugin?.createNotificationChannel(channel);
   }
 
   Future<void> sendNotification({

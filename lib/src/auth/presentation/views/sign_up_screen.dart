@@ -12,6 +12,7 @@ import 'package:gs_orange/src/dashboard/presentation/views/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -112,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         label: 'Sign Up',
                         onPressed: () {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          FirebaseAuth.instance.currentUser?.reload();
+                          sl<FirebaseAuth>().currentUser?.reload();
                           if (formKey.currentState!.validate()) {
                             context.read<AuthBloc>().add(
                                   SignUpEvent(

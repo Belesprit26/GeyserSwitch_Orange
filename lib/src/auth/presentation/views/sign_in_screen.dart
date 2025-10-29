@@ -12,6 +12,7 @@ import 'package:gs_orange/src/dashboard/presentation/views/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -118,7 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         label: 'Sign In',
                         onPressed: () {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          FirebaseAuth.instance.currentUser?.reload();
+                          sl<FirebaseAuth>().currentUser?.reload();
                           if (formKey.currentState!.validate()) {
                             context.read<AuthBloc>().add(
                                   SignInEvent(

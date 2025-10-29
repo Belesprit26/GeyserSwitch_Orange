@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 class CustomTimerProvider extends ChangeNotifier {
   bool isCustom = false;
@@ -8,7 +9,7 @@ class CustomTimerProvider extends ChangeNotifier {
   bool isLoading = true;
 
   // Firebase references
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
 
   // Get userID from FirebaseAuth
