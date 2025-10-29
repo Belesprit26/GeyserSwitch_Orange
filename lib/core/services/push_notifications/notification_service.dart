@@ -85,9 +85,13 @@ class NotificationService {
 
       if (token != null && _currentUser != null) {
         try {
-          // Store the token in the database under 'notificationTokens'
+          // Store the token with metadata (platform, updatedAt, valid)
           await databaseReference.child('notificationTokens').update({
-            token: true,
+            token: {
+              'platform': Platform.operatingSystem,
+              'updatedAt': ServerValue.timestamp,
+              'valid': true,
+            },
           });
 
           // Listen for token refresh
@@ -97,7 +101,11 @@ class NotificationService {
             }
             try {
               await databaseReference.child('notificationTokens').update({
-                newToken: true,
+                newToken: {
+                  'platform': Platform.operatingSystem,
+                  'updatedAt': ServerValue.timestamp,
+                  'valid': true,
+                },
               });
             } catch (e) {
               if (kDebugMode) {
@@ -245,6 +253,16 @@ class NotificationService {
         });
         if (kDebugMode) {
           print('Notification sent successfully: ${response.data}');
+        }
+        // Optional pruning if backend returns invalid tokens
+        final resData = response.data;
+        if (resData is Map && resData['invalidTokens'] is List) {
+          final invalidTokens = List<String>.from(resData['invalidTokens'] as List);
+          for (final t in invalidTokens) {
+            try {
+              await databaseReference.child('notificationTokens').child(t).remove();
+            } catch (_) {}
+          }
         }
       } catch (e) {
         if (kDebugMode) {
