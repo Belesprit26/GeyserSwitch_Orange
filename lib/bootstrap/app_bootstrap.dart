@@ -63,6 +63,7 @@ class AppBootstrap {
     notificationService.initLocalNotifications(context);
     await notificationService.getDeviceToken();
     notificationService.firebaseInit(context);
+    await notificationService.resetIOSBadge();
 
     // Log app open
     await _analytics.logAppOpen();

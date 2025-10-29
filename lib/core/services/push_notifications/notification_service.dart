@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/utils/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class NotificationService {
   // Firebase Messaging instance
@@ -72,16 +74,12 @@ class NotificationService {
           vapidKey: Platform.isIOS ? null : 'YOUR_VAPID_KEY', // Only for web
         );
       } catch (e) {
-        if (kDebugMode) {
-          print('Error getting FCM token: $e');
-        }
+        Log.e(e, null, 'getToken');
         // Return early if we can't get the token
         return;
       }
 
-      if (kDebugMode) {
-        print('FCM Token: $token');
-      }
+      Log.d('FCM Token: $token');
 
       if (token != null && _currentUser != null) {
         try {
@@ -94,11 +92,29 @@ class NotificationService {
             },
           });
 
+          // Mirror metadata in Firestore: users/{uid}/devices/{token}
+          try {
+            final info = await PackageInfo.fromPlatform();
+            final firestore = sl<FirebaseFirestore>();
+            await firestore
+                .collection('users')
+                .doc(_currentUser!.uid)
+                .collection('devices')
+                .doc(token)
+                .set({
+              'platform': Platform.operatingSystem,
+              'osVersion': Platform.operatingSystemVersion,
+              'appVersion': info.version,
+              'buildNumber': info.buildNumber,
+              'updatedAt': FieldValue.serverTimestamp(),
+            }, SetOptions(merge: true));
+          } catch (e, s) {
+            Log.e(e, s, 'firestoreDeviceWrite');
+          }
+
           // Listen for token refresh
           messaging.onTokenRefresh.listen((newToken) async {
-            if (kDebugMode) {
-              print('Token refreshed: $newToken');
-            }
+            Log.d('Token refreshed: $newToken');
             try {
               await databaseReference.child('notificationTokens').update({
                 newToken: {
@@ -107,22 +123,16 @@ class NotificationService {
                   'valid': true,
                 },
               });
-            } catch (e) {
-              if (kDebugMode) {
-                print('Error storing refreshed token: $e');
-              }
+            } catch (e, s) {
+              Log.e(e, s, 'storeRefreshedToken');
             }
           });
-        } catch (e) {
-          if (kDebugMode) {
-            print('Error storing FCM token: $e');
-          }
+        } catch (e, s) {
+          Log.e(e, s, 'storeToken');
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Fatal error in getDeviceToken: $e');
-      }
+      Log.e(e, null, 'getDeviceToken');
     }
   }
 
@@ -158,10 +168,7 @@ class NotificationService {
   // Set up Firebase messaging listeners
   void firebaseInit(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        print('Received a message while in the foreground!');
-        print('Message data: ${message.data}');
-      }
+      Log.d('Foreground message: ${message.data}');
 
       if (message.notification != null) {
         // Show a local notification
@@ -171,15 +178,15 @@ class NotificationService {
 
     // Handle background and terminated state messages
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Open the app normally;
-      print('Notification opened from background state.');
+      Log.d('Opened from background: ${message.data}');
+      handleNotificationNavigation(message, context);
     });
 
     // For handling when the app is terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        // Open the app normally
-        print('Notification opened from terminated state.');
+        Log.d('Initial message: ${message.data}');
+        handleNotificationNavigation(message, context);
       }
     });
   }
@@ -251,9 +258,7 @@ class NotificationService {
           'body': body,
           'data': data,
         });
-        if (kDebugMode) {
-          print('Notification sent successfully: ${response.data}');
-        }
+        Log.d('Notification sent successfully: ${response.data}');
         // Optional pruning if backend returns invalid tokens
         final resData = response.data;
         if (resData is Map && resData['invalidTokens'] is List) {
@@ -264,15 +269,32 @@ class NotificationService {
             } catch (_) {}
           }
         }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Error sending notification: $e');
-        }
+      } catch (e, s) {
+        Log.e(e, s, 'sendNotification');
       }
     } else {
-      if (kDebugMode) {
-        print('No tokens found for user.');
+      Log.d('No tokens found for user.');
+    }
+  }
+
+  // Reset delivered notifications (best-effort badge reset on iOS)
+  Future<void> resetIOSBadge() async {
+    try {
+      await _flutterLocalNotificationsPlugin.cancelAll();
+    } catch (e, s) {
+      Log.e(e, s, 'resetIOSBadge');
+    }
+  }
+
+  // Navigate using data payload (expects 'route')
+  void handleNotificationNavigation(RemoteMessage message, BuildContext context) {
+    try {
+      final route = message.data['route'] as String?;
+      if (route != null && route.isNotEmpty) {
+        Navigator.of(context).pushNamed(route);
       }
+    } catch (e, s) {
+      Log.e(e, s, 'handleNotificationNavigation');
     }
   }
 }

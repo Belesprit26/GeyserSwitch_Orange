@@ -89,6 +89,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
         },
       ),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.notifications_none),
+          onPressed: () {
+            Navigator.of(context).pushNamed('/notifications');
+          },
+        ),
         PopupMenuButton(
           offset: const Offset(0, 50),
           surfaceTintColor: Colors.white,

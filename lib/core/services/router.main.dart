@@ -51,6 +51,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case NotificationsView.routeName:
+      return _pageBuilder(
+        (_) => const NotificationsView(),
+        settings: settings,
+      );
+
     case '/forgot-password':
       return _pageBuilder(
         (_) => const fui.ForgotPasswordScreen(),
