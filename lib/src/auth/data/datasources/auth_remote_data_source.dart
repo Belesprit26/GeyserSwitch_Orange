@@ -170,9 +170,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         case UpdateUserAction.email:
           await _authClient.currentUser?.updateEmail(userData as String);
           await _updateUserData({'email': userData});
+          return;
         case UpdateUserAction.displayName:
           await _authClient.currentUser?.updateDisplayName(userData as String);
           await _updateUserData({'fullName': userData});
+          return;
         case UpdateUserAction.profilePic:
           final ref = _dbClient
               .ref()
@@ -182,6 +184,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           final url = await ref.getDownloadURL();
           await _authClient.currentUser?.updatePhotoURL(url);
           await _updateUserData({'profilePic': url});
+          return;
         case UpdateUserAction.password:
           if (_authClient.currentUser?.email == null) {
             throw const ServerException(
@@ -199,8 +202,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await _authClient.currentUser?.updatePassword(
             newData['newPassword'] as String,
           );
+          return;
         case UpdateUserAction.bio:
           await _updateUserData({'bio': userData as String});
+          return;
       }
     } on FirebaseException catch (e) {
       throw ServerException(

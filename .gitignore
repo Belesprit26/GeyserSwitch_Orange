@@ -56,3 +56,8 @@ ios/Pods/
 # Android NDK intermediate outputs
 android/app/.cxx/
 android/.cxx/
+
+# Xcode user data and workspace state
+**/*.xcuserstate
+ios/**/xcuserdata/
+ios/**/xcshareddata/WorkspaceSettings.xcsettings
