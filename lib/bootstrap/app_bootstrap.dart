@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
+import 'package:gs_orange/bootstrap/device_info_service.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/utils/last_updated_store.dart';
 
 /// Central place to initialize app-wide bootstrapped services.
 ///
@@ -18,6 +22,7 @@ class AppBootstrap {
 
   static bool _postRunInitialized = false;
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  static bool _authListenerBound = false;
 
   static Future<void> preRun() async {
     // Android 13+ notifications permission
@@ -67,6 +72,25 @@ class AppBootstrap {
 
     // Log app open
     await _analytics.logAppOpen();
+
+    // Upsert device info now and on login changes (max once per 7 days)
+    final deviceInfoService = DeviceInfoService();
+    if (await LastUpdatedStore.isStale('device_info', const Duration(days: 1))) {
+      await deviceInfoService.upsertForCurrentUser();
+      await LastUpdatedStore.setNow('device_info');
+    }
+    if (!_authListenerBound) {
+      _authListenerBound = true;
+      final auth = sl<FirebaseAuth>();
+      auth.authStateChanges().listen((User? user) async {
+        if (user != null) {
+          if (await LastUpdatedStore.isStale('device_info', const Duration(days: 1))) {
+            await deviceInfoService.upsertForCurrentUser();
+            await LastUpdatedStore.setNow('device_info');
+          }
+        }
+      });
+    }
   }
 
   static void _configureGlobalErrorHandlers() {
