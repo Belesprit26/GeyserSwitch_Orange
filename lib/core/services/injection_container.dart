@@ -17,6 +17,7 @@ import 'package:gs_orange/src/on_boarding/domain/usecases/check_if_user_is_first
 import 'package:gs_orange/src/on_boarding/presentation/cubit/on_boarding_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

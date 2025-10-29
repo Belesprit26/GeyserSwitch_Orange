@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
@@ -16,6 +17,7 @@ import 'package:gs_orange/src/profile/presentation/refactors/presentation/connec
 import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
@@ -31,6 +33,12 @@ void main() async {
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
   FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
+  if (Platform.isAndroid) {
+    final status = await Permission.notification.status;
+    if (status.isDenied || status.isRestricted) {
+      await Permission.notification.request();
+    }
+  }
   await init();
   runApp(const MyApp());
   DependencyInjection.init();

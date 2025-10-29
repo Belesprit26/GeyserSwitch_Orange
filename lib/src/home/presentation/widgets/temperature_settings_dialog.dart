@@ -31,7 +31,7 @@ class _TempSettingDialogState extends State<TempSettingDialog>
   void initState() {
     super.initState();
     _user = _firebaseAuth.currentUser;
-    _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+    _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
     _animationController = AnimationController(
       vsync: this,

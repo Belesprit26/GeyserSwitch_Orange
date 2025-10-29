@@ -17,7 +17,7 @@ class GeyserExtraDataWidgets extends StatelessWidget {
     }
 
     final userID = user.uid;
-    final DatabaseReference _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+    final DatabaseReference _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
     return StreamBuilder<DatabaseEvent>(
       stream: _firebaseDB

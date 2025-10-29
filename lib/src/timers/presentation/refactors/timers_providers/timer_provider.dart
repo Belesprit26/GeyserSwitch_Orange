@@ -32,7 +32,7 @@ class TimerProvider extends ChangeNotifier {
 
 
   final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
-  final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  final _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
   TimerProvider() {
     initTimers();

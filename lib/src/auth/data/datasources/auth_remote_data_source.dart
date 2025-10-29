@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:gs_orange/core/services/injection_container.dart';
 
 abstract class AuthRemoteDataSource {
   const AuthRemoteDataSource();
@@ -137,7 +138,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _setUserData(_authClient.currentUser!, email);
       
       // Initialize sensor data in Realtime Database
-      final rtdb = FirebaseDatabase.instance.ref();
+      final rtdb = sl<FirebaseDatabase>().ref();
       await rtdb
           .child('GeyserSwitch')
           .child(userCred.user!.uid)

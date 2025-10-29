@@ -9,7 +9,7 @@ class ConnectionLinkProvider with ChangeNotifier {
   bool isLoading = true;
 
   final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
-  final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  final _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
   ConnectionLinkProvider() {
     _listenToStateChanges();

@@ -10,7 +10,7 @@ class HomeButtonProvider with ChangeNotifier {
 
   final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   final DatabaseReference _firebaseDB =
-  FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
   HomeButtonProvider() {
     _fetchGeysers();

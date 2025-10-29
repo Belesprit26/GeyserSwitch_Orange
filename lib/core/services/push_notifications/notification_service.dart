@@ -25,7 +25,7 @@ class NotificationService {
 
   NotificationService() {
     if (_currentUser != null) {
-      databaseReference = FirebaseDatabase.instance
+      databaseReference = sl<FirebaseDatabase>()
           .ref()
           .child("GeyserSwitch")
           .child(_currentUser!.uid)

@@ -10,7 +10,7 @@ class CustomTimerProvider extends ChangeNotifier {
 
   // Firebase references
   final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
-  final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  final _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
   // Get userID from FirebaseAuth
   String get userID => _firebaseAuth.currentUser!.uid;

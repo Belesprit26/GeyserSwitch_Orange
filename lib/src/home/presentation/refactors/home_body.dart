@@ -16,7 +16,7 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  final _firebaseDB = FirebaseDatabase.instance.ref().child('GeyserSwitch');
+  final _firebaseDB = sl<FirebaseDatabase>().ref().child('GeyserSwitch');
   late Stream<DatabaseEvent> _temperatureStream;
   final _firebaseAuth = sl<FirebaseAuth>();
   late String _userID;
