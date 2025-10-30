@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 import 'package:gs_orange/bootstrap/device_info_service.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/core/utils/last_updated_store.dart';
 
 /// Central place to initialize app-wide bootstrapped services.

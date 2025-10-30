@@ -1,4 +1,4 @@
-part of 'injection_container.dart';
+part of 'injection_container_exports.dart';
 
 final sl = GetIt.instance;
 

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/auth/presentation/bloc/auth_bloc.dart';
 import 'package:gs_orange/src/profile/presentation/views/edit_profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
 import 'package:gs_orange/src/home/presentation/widgets/display_card.dart';
 import 'package:gs_orange/src/home/presentation/widgets/temperature_settings_dialog.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 class HomeBody extends StatefulWidget {
   final Geyser geyser;

@@ -5,8 +5,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:gs_orange/core/models/device_info_record_model.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
-import 'package:gs_orange/core/utils/logger.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
+import 'package:gs_orange/core/utils/debug_logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class DeviceInfoService {

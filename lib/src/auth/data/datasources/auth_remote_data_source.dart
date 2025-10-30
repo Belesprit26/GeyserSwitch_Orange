@@ -11,7 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 abstract class AuthRemoteDataSource {
   const AuthRemoteDataSource();

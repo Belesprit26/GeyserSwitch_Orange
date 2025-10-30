@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

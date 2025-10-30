@@ -12,7 +12,7 @@ import 'package:gs_orange/src/dashboard/presentation/views/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

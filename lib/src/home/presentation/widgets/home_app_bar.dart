@@ -6,7 +6,7 @@ import 'package:gs_orange/src/esp_32/wifi_provisioning.dart';
 import 'package:gs_orange/src/home/presentation/widgets/asset_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 import '../../../../core/common/app/providers/user_provider.dart';
 import '../../../../core/utils/time-helper.dart';
 

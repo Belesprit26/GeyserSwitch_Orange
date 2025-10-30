@@ -1,4 +1,4 @@
-part of 'router.dart';
+part of 'router_exports.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

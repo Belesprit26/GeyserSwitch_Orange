@@ -5,11 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
-import 'package:gs_orange/core/utils/logger.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
+import 'package:gs_orange/core/utils/debug_logger.dart';
+import 'package:gs_orange/core/services/push_notifications/notification_router.dart';
 
 class NotificationService {
   // Firebase Messaging instance
@@ -74,12 +75,16 @@ class NotificationService {
           vapidKey: Platform.isIOS ? null : 'YOUR_VAPID_KEY', // Only for web
         );
       } catch (e) {
-        Log.e(e, null, 'getToken');
+        if (kDebugMode) {
+          print('Error getting FCM token: $e');
+        }
         // Return early if we can't get the token
         return;
       }
 
-      Log.d('FCM Token: $token');
+      if (kDebugMode) {
+        print('FCM Token: $token');
+      }
 
       if (token != null && _currentUser != null) {
         try {
@@ -92,29 +97,11 @@ class NotificationService {
             },
           });
 
-          // Mirror metadata in Firestore: users/{uid}/devices/{token}
-          try {
-            final info = await PackageInfo.fromPlatform();
-            final firestore = sl<FirebaseFirestore>();
-            await firestore
-                .collection('users')
-                .doc(_currentUser!.uid)
-                .collection('devices')
-                .doc(token)
-                .set({
-              'platform': Platform.operatingSystem,
-              'osVersion': Platform.operatingSystemVersion,
-              'appVersion': info.version,
-              'buildNumber': info.buildNumber,
-              'updatedAt': FieldValue.serverTimestamp(),
-            }, SetOptions(merge: true));
-          } catch (e, s) {
-            Log.e(e, s, 'firestoreDeviceWrite');
-          }
-
           // Listen for token refresh
           messaging.onTokenRefresh.listen((newToken) async {
-            Log.d('Token refreshed: $newToken');
+            if (kDebugMode) {
+              print('Token refreshed: $newToken');
+            }
             try {
               await databaseReference.child('notificationTokens').update({
                 newToken: {
@@ -123,16 +110,22 @@ class NotificationService {
                   'valid': true,
                 },
               });
-            } catch (e, s) {
-              Log.e(e, s, 'storeRefreshedToken');
+            } catch (e) {
+              if (kDebugMode) {
+                print('Error storing refreshed token: $e');
+              }
             }
           });
-        } catch (e, s) {
-          Log.e(e, s, 'storeToken');
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error storing FCM token: $e');
+          }
         }
       }
     } catch (e) {
-      Log.e(e, null, 'getDeviceToken');
+      if (kDebugMode) {
+        print('Fatal error in getDeviceToken: $e');
+      }
     }
   }
 
@@ -174,11 +167,15 @@ class NotificationService {
         // Show a local notification
         showNotification(message);
       }
+
+      // Persist incoming notification
+      _persistNotification(message, opened: false);
     });
 
     // Handle background and terminated state messages
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       Log.d('Opened from background: ${message.data}');
+      _persistNotification(message, opened: true);
       handleNotificationNavigation(message, context);
     });
 
@@ -186,6 +183,7 @@ class NotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         Log.d('Initial message: ${message.data}');
+        _persistNotification(message, opened: true);
         handleNotificationNavigation(message, context);
       }
     });
@@ -286,15 +284,51 @@ class NotificationService {
     }
   }
 
-  // Navigate using data payload (expects 'route')
+  // Navigate using data payload via mapper
   void handleNotificationNavigation(RemoteMessage message, BuildContext context) {
     try {
-      final route = message.data['route'] as String?;
-      if (route != null && route.isNotEmpty) {
-        Navigator.of(context).pushNamed(route);
-      }
+      final data = message.data;
+      NotificationRouter.navigateFromData(context, data);
     } catch (e, s) {
       Log.e(e, s, 'handleNotificationNavigation');
+    }
+  }
+
+  Future<void> _persistNotification(RemoteMessage message, {required bool opened}) async {
+    try {
+      final user = sl<FirebaseAuth>().currentUser;
+      if (user == null) return;
+
+      final String id = message.messageId ?? DateTime.now().millisecondsSinceEpoch.toString();
+      final title = message.notification?.title;
+      final body = message.notification?.body;
+      final data = message.data;
+
+      // Firestore persist
+      final firestore = sl<FirebaseFirestore>();
+      await firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('notifications')
+          .doc(id)
+          .set({
+        'title': title,
+        'body': body,
+        'data': data,
+        'receivedAt': FieldValue.serverTimestamp(),
+        'seen': opened,
+      }, SetOptions(merge: true));
+
+      // RTDB mirror
+      await databaseReference.child('Notifications').child(id).set({
+        'title': title,
+        'body': body,
+        'data': data,
+        'receivedAt': ServerValue.timestamp,
+        'seen': opened,
+      });
+    } catch (e, s) {
+      Log.e(e, s, 'persistNotification');
     }
   }
 }

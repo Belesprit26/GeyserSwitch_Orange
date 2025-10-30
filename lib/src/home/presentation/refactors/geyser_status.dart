@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
 import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
 import 'package:provider/provider.dart';
-import 'package:gs_orange/core/services/injection_container.dart';
+import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 class GeyserStatus extends StatefulWidget {
   final Geyser geyser;
