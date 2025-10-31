@@ -1,6 +1,6 @@
 import 'package:gs_orange/core/common/app/providers/tab_navigator.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
-import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ extension ContextExt on BuildContext {
 
   UserProvider get userProvider => read<UserProvider>();
 
-  LocalUser? get currentUser => userProvider.user;
+  LocalUserEntity? get currentUser => userProvider.user;
 
   TabNavigator get tabNavigator => read<TabNavigator>();
 

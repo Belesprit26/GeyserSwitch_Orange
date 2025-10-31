@@ -1,7 +1,7 @@
 import 'package:gs_orange/core/utils/typdefs.dart';
-import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/entities/user_entity.dart';
 
-class LocalUserModel extends LocalUser {
+class LocalUserModel extends LocalUserEntity {
   const LocalUserModel({
     required super.uid,
     required super.email,

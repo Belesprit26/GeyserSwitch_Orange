@@ -4,7 +4,7 @@ import 'package:gs_orange/core/errors/exceptions.dart';
 import 'package:gs_orange/core/errors/failures.dart';
 import 'package:gs_orange/core/utils/typdefs.dart';
 import 'package:gs_orange/src/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/entities/user_entity.dart';
 import 'package:gs_orange/src/auth/domain/repos/auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
@@ -23,7 +23,7 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  ResultFuture<LocalUser> signIn({
+  ResultFuture<LocalUserEntity> signIn({
     required String email,
     required String password,
   }) async {

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:gs_orange/core/enums/update_user.dart';
-import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/entities/user_entity.dart';
 import 'package:gs_orange/src/auth/domain/usecases/delete_user.dart';
 import 'package:gs_orange/src/auth/domain/usecases/forgot_password.dart';
 import 'package:gs_orange/src/auth/domain/usecases/sign_in.dart';

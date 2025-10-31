@@ -1,13 +1,13 @@
 import 'package:gs_orange/core/enums/update_user.dart';
 import 'package:gs_orange/core/utils/typdefs.dart';
-import 'package:gs_orange/src/auth/domain/entities/user.dart';
+import 'package:gs_orange/src/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepo {
   const AuthRepo();
 
   ResultFuture<void> forgotPassword(String email);
 
-  ResultFuture<LocalUser> signIn({
+  ResultFuture<LocalUserEntity> signIn({
     required String email,
     required String password,
   });
