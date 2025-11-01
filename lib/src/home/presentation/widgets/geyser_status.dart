@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 class GeyserStatus extends StatefulWidget {
-  final Geyser geyser;
+  final GeyserEntity geyser;
 
   GeyserStatus({Key? key, required this.geyser}) : super(key: key);
 
@@ -44,9 +44,9 @@ class _GeyserStatusState extends State<GeyserStatus> {
   Widget build(BuildContext context) {
     Provider.of<GeyserProvider>(context);
 
-    return ChangeNotifierProvider<Geyser>.value(
+    return ChangeNotifierProvider<GeyserEntity>.value(
       value: widget.geyser,
-      child: Consumer<Geyser>(
+      child: Consumer<GeyserEntity>(
         builder: (context, geyser, _) {
           final isGeyserOn = geyser.isOn;
 

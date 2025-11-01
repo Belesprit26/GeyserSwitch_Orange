@@ -6,7 +6,7 @@ import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 
 class GeyserProvider with ChangeNotifier {
   bool isLoading = true;
-  List<Geyser> geyserList = [];
+  List<GeyserEntity> geyserList = [];
 
   final FirebaseAuth _firebaseAuth = sl<FirebaseAuth>();
   final DatabaseReference _firebaseDB =
@@ -42,7 +42,7 @@ class GeyserProvider with ChangeNotifier {
             }
           });
 
-          final geyser = Geyser(
+          final geyser = GeyserEntity(
             id: geyserId,
             name: geyserData['name'] ?? geyserId,
             sensorKey: sensorKey,
@@ -76,7 +76,7 @@ class GeyserProvider with ChangeNotifier {
   }
 
   // Method to listen to state changes for a specific geyser
-  void _listenToGeyserStateChanges(DatabaseReference geyserRef, Geyser geyser) {
+  void _listenToGeyserStateChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
     geyserRef.child('state').onValue.listen((event) {
       final newState = event.snapshot.value as bool? ?? false;
       geyser.isOn = newState;
@@ -84,7 +84,7 @@ class GeyserProvider with ChangeNotifier {
   }
 
   // Method to listen to sensor data changes for a specific geyser
-  void _listenToGeyserSensorChanges(DatabaseReference geyserRef, Geyser geyser) {
+  void _listenToGeyserSensorChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
     geyserRef.child(geyser.sensorKey).onValue.listen((event) {
       final value = event.snapshot.value;
       double newTemperature;
@@ -108,7 +108,7 @@ class GeyserProvider with ChangeNotifier {
   }
 
   // Toggle the geyser state
-  Future<void> toggleGeyser(Geyser geyser) async {
+  Future<void> toggleGeyser(GeyserEntity geyser) async {
     try {
       final user = _firebaseAuth.currentUser!;
       geyser.isOn = !geyser.isOn;

@@ -9,7 +9,7 @@ import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 
 class TempSettingDialog extends StatefulWidget {
-  final Geyser geyser;
+  final GeyserEntity geyser;
 
   TempSettingDialog({required this.geyser});
 

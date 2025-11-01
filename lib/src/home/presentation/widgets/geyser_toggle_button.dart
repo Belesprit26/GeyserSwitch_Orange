@@ -6,7 +6,7 @@ import 'package:gs_orange/core/utils/core_utils.dart';
 import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
 
 class GeyserToggleButton extends StatelessWidget {
-  final Geyser geyser;
+  final GeyserEntity geyser;
 
   const GeyserToggleButton({Key? key, required this.geyser}) : super(key: key);
 

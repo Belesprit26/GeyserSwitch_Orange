@@ -100,7 +100,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget buildSingleGeyserView(Geyser geyser) {
+  Widget buildSingleGeyserView(GeyserEntity geyser) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth;
     
@@ -113,7 +113,7 @@ class _HomeViewState extends State<HomeView> {
       containerWidth = screenWidth * 0.8; // For smaller devices
     }
 
-    return ChangeNotifierProvider<Geyser>.value(
+    return ChangeNotifierProvider<GeyserEntity>.value(
       value: geyser,
       child: Column(
         children: [
@@ -137,7 +137,7 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Consumer<Geyser>(
+                    Consumer<GeyserEntity>(
                       builder: (context, geyser, _) {
                         return Column(
                           children: [
@@ -182,7 +182,7 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Consumer<Geyser>(
+                    Consumer<GeyserEntity>(
                       builder: (context, geyser, _) {
                         return Column(
                           children: [
@@ -206,7 +206,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
 
-  Widget buildGeyserCarousel(List<Geyser> geysers) {
+  Widget buildGeyserCarousel(List<GeyserEntity> geysers) {
     return Column(
       children: [
         SizedBox(

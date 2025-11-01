@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Geyser extends ChangeNotifier {
+class GeyserEntity extends ChangeNotifier {
   final String id;
   final String name;
   final String sensorKey; // e.g., 'sensor_1' or 'sensor_2'
@@ -8,7 +8,7 @@ class Geyser extends ChangeNotifier {
   double _temperature;
   double maxTemp;
 
-  Geyser({
+  GeyserEntity({
     required this.id,
     required this.name,
     required this.sensorKey,

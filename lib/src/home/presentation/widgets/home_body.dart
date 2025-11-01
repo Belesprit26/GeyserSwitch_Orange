@@ -7,7 +7,7 @@ import 'package:gs_orange/src/home/presentation/widgets/temperature_settings_dia
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 
 class HomeBody extends StatefulWidget {
-  final Geyser geyser;
+  final GeyserEntity geyser;
 
   const HomeBody({Key? key, required this.geyser}) : super(key: key);
 
