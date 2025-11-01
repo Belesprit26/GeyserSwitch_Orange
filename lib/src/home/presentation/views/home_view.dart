@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_body.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/geyser_extra_data.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/home_button_1.dart';
-import 'package:gs_orange/src/home/presentation/refactors/geyser_status.dart';
+import 'package:gs_orange/src/home/presentation/widgets/home_body.dart';
+import 'package:gs_orange/src/home/presentation/widgets/geyser_stats_widget.dart';
+import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
+import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
+import 'package:gs_orange/src/home/presentation/widgets/geyser_toggle_button.dart';
+import 'package:gs_orange/src/home/presentation/widgets/geyser_status.dart';
 import 'package:gs_orange/src/home/presentation/widgets/home_app_bar.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
@@ -46,16 +46,16 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final homeButtonProvider = Provider.of<HomeButtonProvider>(context);
+    final geyserProvider = Provider.of<GeyserProvider>(context);
 
-    if (homeButtonProvider.isLoading) {
+    if (geyserProvider.isLoading) {
       return Scaffold(
         appBar: const HomeAppBar(),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
-    final geyserCount = homeButtonProvider.geyserList.length;
+    final geyserCount = geyserProvider.geyserList.length;
 
     return SafeArea(
       child: Scaffold(
@@ -69,8 +69,8 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const SizedBox(height: 33),
             geyserCount == 1
-                ? buildSingleGeyserView(homeButtonProvider.geyserList[0])
-                : buildGeyserCarousel(homeButtonProvider.geyserList),
+                ? buildSingleGeyserView(geyserProvider.geyserList[0])
+                : buildGeyserCarousel(geyserProvider.geyserList),
             const SizedBox(height: 18),
             Center(
               child: Text(
@@ -93,7 +93,7 @@ class _HomeViewState extends State<HomeView> {
               },
             ),
             const SizedBox(height: 15),
-            GeyserExtraDataWidgets(),
+            GeyserStatsWidget(),
           ],
         ),
       ),
@@ -144,7 +144,7 @@ class _HomeViewState extends State<HomeView> {
                             GeyserStatus(geyser: geyser),
                             HomeBody(geyser: geyser),
                             const SizedBox(height: 35),
-                            HomeButton1(geyser: geyser),
+                            GeyserToggleButton(geyser: geyser),
                             const SizedBox(height: 35),
                           ],
                         );
@@ -189,7 +189,7 @@ class _HomeViewState extends State<HomeView> {
                             GeyserStatus(geyser: geyser),
                             HomeBody(geyser: geyser),
                             const SizedBox(height: 35),
-                            HomeButton1(geyser: geyser),
+                            GeyserToggleButton(geyser: geyser),
                             const SizedBox(height: 35),
                           ],
                         );

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
+import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 import 'package:gs_orange/src/home/presentation/widgets/display_card.dart';
 import 'package:gs_orange/src/home/presentation/widgets/temperature_settings_dialog.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
@@ -113,3 +113,4 @@ class _HomeBodyState extends State<HomeBody> {
     );
   }
 }
+

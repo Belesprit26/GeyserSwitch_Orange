@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
+import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
+import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 
@@ -42,7 +42,7 @@ class _GeyserStatusState extends State<GeyserStatus> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<HomeButtonProvider>(context);
+    Provider.of<GeyserProvider>(context);
 
     return ChangeNotifierProvider<Geyser>.value(
       value: widget.geyser,
@@ -112,3 +112,4 @@ class _GeyserStatusState extends State<GeyserStatus> {
     );
   }
 }
+

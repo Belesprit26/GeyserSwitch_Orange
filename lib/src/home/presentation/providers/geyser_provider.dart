@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
+import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 
-class HomeButtonProvider with ChangeNotifier {
+class GeyserProvider with ChangeNotifier {
   bool isLoading = true;
   List<Geyser> geyserList = [];
 
@@ -12,7 +12,7 @@ class HomeButtonProvider with ChangeNotifier {
   final DatabaseReference _firebaseDB =
   sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
-  HomeButtonProvider() {
+  GeyserProvider() {
     _fetchGeysers();
   }
 
@@ -123,3 +123,4 @@ class HomeButtonProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+

@@ -11,7 +11,7 @@ import 'package:gs_orange/src/dashboard/presentation/providers/dashboard_control
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/home_button_provider.dart';
+import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
 import 'package:gs_orange/src/profile/presentation/refactors/presentation/connection_link_update.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provider/custom_timer_provider.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DashboardController()),
-        ChangeNotifierProvider(create: (_) => HomeButtonProvider()),
+        ChangeNotifierProvider(create: (_) => GeyserProvider()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
         ChangeNotifierProvider(create: (_) => CustomTimerProvider()),
         ChangeNotifierProvider(create: (_) => ConnectionLinkProvider(),

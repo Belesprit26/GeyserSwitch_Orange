@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/home/presentation/widgets/home_info_card.dart';
 import 'package:iconly/iconly.dart';
-import '../../../../../core/res/colours.dart';
+import '../../../../core/res/colours.dart';
 
-class GeyserExtraDataWidgets extends StatelessWidget {
-  const GeyserExtraDataWidgets({Key? key}) : super(key: key);
+class GeyserStatsWidget extends StatelessWidget {
+  const GeyserStatsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,3 +150,4 @@ class GeyserExtraDataWidgets extends StatelessWidget {
     );
   }
 }
+

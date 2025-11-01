@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gs_orange/src/home/presentation/refactors/home_providers/presentation/geyser_entity.dart';
+import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/core/res/colours.dart';
 import 'package:gs_orange/core/utils/core_utils.dart';
-import '../home_button_provider.dart';
+import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
 
-class HomeButton1 extends StatelessWidget {
+class GeyserToggleButton extends StatelessWidget {
   final Geyser geyser;
 
-  const HomeButton1({Key? key, required this.geyser}) : super(key: key);
+  const GeyserToggleButton({Key? key, required this.geyser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HomeButtonProvider>(context, listen: false);
+    final provider = Provider.of<GeyserProvider>(context, listen: false);
 
     return Center(
       child: GestureDetector(
@@ -65,3 +65,4 @@ class HomeButton1 extends StatelessWidget {
     );
   }
 }
+
