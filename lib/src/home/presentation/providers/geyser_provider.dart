@@ -12,6 +12,13 @@ class GeyserProvider with ChangeNotifier {
   final DatabaseReference _firebaseDB =
   sl<FirebaseDatabase>().ref().child('GeyserSwitch');
 
+  // Track pending state updates to prevent race conditions
+  // Key: geyserId, Value: pending state we're writing
+  final Map<String, bool> _pendingStateUpdates = {};
+  
+  // Track which geysers are currently being toggled (to prevent double-taps)
+  final Set<String> _togglingGeysers = {};
+
   GeyserProvider() {
     _fetchGeysers();
   }
@@ -79,7 +86,28 @@ class GeyserProvider with ChangeNotifier {
   void _listenToGeyserStateChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
     geyserRef.child('state').onValue.listen((event) {
       final newState = event.snapshot.value as bool? ?? false;
-      geyser.isOn = newState;
+      
+      // RACE CONDITION MITIGATION:
+      // If we have a pending update for this geyser, ignore listener updates
+      // that don't match our pending state (they're likely stale or from conflicts)
+      if (_pendingStateUpdates.containsKey(geyser.id)) {
+        final pendingState = _pendingStateUpdates[geyser.id];
+        // Only apply if it matches what we're trying to write
+        // This prevents stale listener updates from overwriting our optimistic update
+        if (newState == pendingState) {
+          // Our write succeeded, remove from pending
+          _pendingStateUpdates.remove(geyser.id);
+          geyser.isOn = newState;
+        } else {
+          // This update doesn't match what we're writing - it's likely stale
+          // Ignore it and wait for our write to complete
+          return;
+        }
+      } else {
+        // No pending update, safe to apply this change
+        // This handles updates from other devices or initial sync
+        geyser.isOn = newState;
+      }
     });
   }
 
@@ -109,18 +137,48 @@ class GeyserProvider with ChangeNotifier {
 
   // Toggle the geyser state
   Future<void> toggleGeyser(GeyserEntity geyser) async {
+    // Prevent double-taps and concurrent toggles
+    if (_togglingGeysers.contains(geyser.id)) {
+      return; // Already toggling this geyser
+    }
+
+    final user = _firebaseAuth.currentUser!;
+    final previousState = geyser.isOn;
+    final newState = !previousState;
+
     try {
-      final user = _firebaseAuth.currentUser!;
-      geyser.isOn = !geyser.isOn;
+      // Mark as toggling
+      _togglingGeysers.add(geyser.id);
+      
+      // Track pending update to prevent race conditions
+      _pendingStateUpdates[geyser.id] = newState;
+      
+      // Optimistic update - update UI immediately
+      geyser.isOn = newState;
+      notifyListeners();
+
+      // Write to Firebase
       await _firebaseDB
           .child(user.uid)
           .child("Geysers")
           .child(geyser.id)
-          .update({"state": geyser.isOn});
+          .update({"state": newState});
+
+      // Success - pending update will be cleared by listener when it receives confirmation
+      // Return success (no error rollback needed since listener will handle it)
+      
     } catch (error) {
-      print("Error toggling geyser state: $error");
+      // ERROR ROLLBACK: Revert optimistic update
+      geyser.isOn = previousState;
+      _pendingStateUpdates.remove(geyser.id);
+      notifyListeners();
+      
+      // Re-throw so caller can handle the error (e.g., show error snackbar)
+      throw Exception('Failed to toggle geyser: $error');
+    } finally {
+      // Always remove from toggling set
+      _togglingGeysers.remove(geyser.id);
     }
-    notifyListeners();
   }
 }
 

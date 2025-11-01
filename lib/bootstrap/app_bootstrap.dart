@@ -25,44 +25,51 @@ class AppBootstrap {
   static bool _authListenerBound = false;
 
   static Future<void> preRun() async {
-    // Android 13+ notifications permission
-    if (Platform.isAndroid) {
-      final status = await Permission.notification.status;
-      if (status.isDenied || status.isRestricted) {
-        await Permission.notification.request();
-      }
-    }
-
-    // Ensure iOS displays notifications in foreground
-    if (Platform.isIOS) {
-      // Request iOS notification permission
-      await FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-      // Ensure notifications show in foreground
-      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-
     // Enable analytics collection (toggle here if needed)
     await _analytics.setAnalyticsCollectionEnabled(true);
 
     // Global error handlers (toggle or extend to Crashlytics if added)
     _configureGlobalErrorHandlers();
+    
+    // Note: Permission requests moved to postRun() to avoid blocking app initialization
+    // This prevents stalling when user takes time to respond to permission dialogs
   }
 
   static Future<void> postRun(BuildContext context) async {
     if (_postRunInitialized) return;
     _postRunInitialized = true;
+
+    // Request permissions AFTER app is initialized to avoid blocking startup
+    // Use a small delay to ensure the UI is ready before showing permission dialogs
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      // Android 13+ notifications permission
+      if (Platform.isAndroid) {
+        final status = await Permission.notification.status;
+        if (status.isDenied || status.isRestricted) {
+          await Permission.notification.request();
+        }
+      }
+
+      // Ensure iOS displays notifications in foreground
+      if (Platform.isIOS) {
+        // Request iOS notification permission
+        await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
+        // Ensure notifications show in foreground
+        await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+    });
 
     final notificationService = NotificationService();
     notificationService.initLocalNotifications(context);
