@@ -6,7 +6,6 @@ import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
 
 class GeyserToggleButton extends StatefulWidget {
   final GeyserEntity geyser;
-
   const GeyserToggleButton({Key? key, required this.geyser}) : super(key: key);
 
   @override
@@ -14,82 +13,53 @@ class GeyserToggleButton extends StatefulWidget {
 }
 
 class _GeyserToggleButtonState extends State<GeyserToggleButton> {
+  bool _busy = false;
+
+  void _showSnack(BuildContext context, String message, {Color? bg}) {
+    final bar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: bg,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(10),
+    );
+    // Don’t fully remove first; replace/hide is smoother
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(bar);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<GeyserProvider>(context, listen: false);
-    // Store the widget's context (from StatefulWidget) to use for snackbar
-    // This ensures we have access to the ScaffoldMessenger even after async operations
-    final scaffoldContext = context;
-
-    // LISTEN TO GYSER ENTITY CHANGES: Use Consumer to reactively rebuild when geyser state changes
+    // If a Provider<GeyserEntity> exists, Consumer is fine. Otherwise drop it.
     return Consumer<GeyserEntity>(
       builder: (_, geyser, __) {
         return Center(
-          child: GestureDetector(
-            onTap: () async {
-              // Store previous state for snackbar message
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: _busy ? null : () async {
+              _busy = true;
               final previousState = geyser.isOn;
-              
               try {
-                // Wait for Firebase update to complete
-                await provider.toggleGeyser(geyser);
-                
-                // SNACKBAR AFTER COMPLETION: Show success message only after Firebase confirms
-                // Check if widget is still mounted before showing snackbar
+                await context.read<GeyserProvider>().toggleGeyser(geyser);
                 if (!mounted) return;
-                
-                final message = previousState
+                final msg = previousState
                     ? '${geyser.name} has been turned OFF successfully'
                     : '${geyser.name} has been turned ON successfully';
-                
-                // Use ScaffoldMessenger directly with mounted check
-                if (mounted) {
-                  ScaffoldMessenger.of(scaffoldContext)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          message,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: Colours.secondaryColour,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        margin: const EdgeInsets.all(10),
-                      ),
-                    );
-                }
-              } catch (error) {
-                // ERROR HANDLING: Show error message if toggle failed
-                // Check if widget is still mounted before showing snackbar
+                _showSnack(context, msg, bg: Colours.secondaryColour);
+              } catch (_) {
                 if (!mounted) return;
-                
-                if (mounted) {
-                  ScaffoldMessenger.of(scaffoldContext)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Failed to toggle ${geyser.name}. Please try again.',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        margin: const EdgeInsets.all(10),
-                      ),
-                    );
-                }
+                _showSnack(context,
+                  'Failed to toggle ${geyser.name}. Please try again.',
+                  bg: Colors.red,
+                );
+              } finally {
+                if (mounted) _busy = false;
               }
             },
             child: AnimatedContainer(
@@ -115,14 +85,13 @@ class _GeyserToggleButtonState extends State<GeyserToggleButton> {
               child: AnimatedAlign(
                 duration: const Duration(milliseconds: 300),
                 alignment: geyser.isOn ? Alignment.centerRight : Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: Container(
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2),
+                  child: SizedBox(
                     width: 30,
                     height: 30,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                     ),
                   ),
                 ),
@@ -134,4 +103,3 @@ class _GeyserToggleButtonState extends State<GeyserToggleButton> {
     );
   }
 }
-

@@ -46,54 +46,82 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final geyserProvider = Provider.of<GeyserProvider>(context);
-
-    if (geyserProvider.isLoading) {
-      return Scaffold(
-        appBar: const HomeAppBar(),
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    final geyserCount = geyserProvider.geyserList.length;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: const HomeAppBar(),
-        body: geyserCount == 0
-            ? const Center(child: Text('No geysers connected'))
-            : ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverToBoxAdapter(
+                child: Consumer<GeyserProvider>(
+                  builder: (context, geyserProvider, _) {
+                    if (geyserProvider.isLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
 
-          children: [
-            const SizedBox(height: 33),
-            geyserCount == 1
-                ? buildSingleGeyserView(geyserProvider.geyserList[0])
-                : buildGeyserCarousel(geyserProvider.geyserList),
-            const SizedBox(height: 18),
-            Center(
-              child: Text(
-                'Number of geysers: $geyserCount',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
+                    final geysers = geyserProvider.geyserList;
+                    final geyserCount = geysers.length;
+
+                    if (geyserCount == 0) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 60),
+                        child: Center(child: Text('No geysers connected')),
+                      );
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 33),
+                        geyserCount == 1
+                            ? buildSingleGeyserView(geysers[0])
+                            : buildGeyserCarousel(geysers),
+                        const SizedBox(height: 18),
+                        Center(
+                          child: Text(
+                            'Number of geysers: $geyserCount',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Displaying active timers
+                        Consumer<TimerProvider>(
+                          builder: (context, timerProvider, _) {
+                            final activeTimers = timerProvider.getActiveTimers();
+                            return activeTimers.isEmpty
+                                ? const Center(
+                                    child: Text('No timers are currently active.',
+                                        style: TextStyle(fontSize: 16)),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      'Active Timers: ${activeTimers.join(', ')}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  );
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            // Displaying active timers
-            Consumer<TimerProvider>(
-              builder: (context, timerProvider, _) {
-                List<String> activeTimers = timerProvider.getActiveTimers();
-                return activeTimers.isEmpty
-                    ? Center(child: const Text('No timers are currently active.', style: TextStyle(fontSize: 16),),)
-                    : Center(child: Text('Active Timers: ${activeTimers.join(', ')}', style: TextStyle(fontSize: 16),
-                ),);
-              },
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverToBoxAdapter(
+                child: GeyserStatsWidget(),
+              ),
             ),
-            const SizedBox(height: 15),
-            GeyserStatsWidget(),
           ],
         ),
       ),
