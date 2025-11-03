@@ -21,5 +21,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:gs_orange/src/ble/data/datasources/ble_remote_data_source.dart';
+import 'package:gs_orange/src/ble/data/datasources/ble_remote_data_source_impl.dart';
+import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
+import 'package:gs_orange/src/ble/data/repos/ble_repo_impl.dart';
+import 'package:gs_orange/src/ble/provisioning/ble_provisioning_service.dart';
 
 part 'injection_container.main.dart';

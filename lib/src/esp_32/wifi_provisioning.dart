@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/core/common/app/providers/user_provider.dart';
 
+@Deprecated('Use BLE provisioning: BleProvisioningService in lib/src/ble/provisioning/ble_provisioning_service.dart')
 class WiFiConfigPage extends StatefulWidget {
   const WiFiConfigPage({Key? key}) : super(key: key);
 

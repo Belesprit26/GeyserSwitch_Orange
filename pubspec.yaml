@@ -28,6 +28,7 @@ dependencies:
   googleapis_auth: ^1.6.0
   http: ^1.2.2
   permission_handler: ^11.3.1
+  flutter_blue_plus: ^1.27.0
   syncfusion_flutter_gauges: ^27.1.56
   app_settings: ^5.1.1
   widgets_easier: ^0.0.10

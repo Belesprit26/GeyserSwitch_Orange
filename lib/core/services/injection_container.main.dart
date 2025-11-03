@@ -5,6 +5,7 @@ final sl = GetIt.instance;
 Future<void> init() async {
   await _initOnBoarding();
   await _initAuth();
+  await _initBle();
 }
 
 void setupSL() {
@@ -74,4 +75,15 @@ Future<void> _initOnBoarding() async {
       () => OnBoardingLocalDataSrcImpl(sl()),
     )
     ..registerLazySingleton(() => prefs);
+}
+
+Future<void> _initBle() async {
+  sl
+    ..registerLazySingleton<BleRemoteDataSource>(
+      () => BleRemoteDataSourceImpl(),
+    )
+    ..registerLazySingleton<BleRepo>(
+      () => BleRepoImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton(() => BleProvisioningService(bleRepo: sl()));
 }
