@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gs_orange/core/common/widgets/popup_item.dart';
 import 'package:gs_orange/core/res/colours.dart';
-import 'package:gs_orange/src/esp_32/wifi_provisioning.dart';
+import 'package:gs_orange/src/ble/presentation/views/ble_scan_connect_view.dart';
 import 'package:gs_orange/src/home/presentation/widgets/asset_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -114,7 +114,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
               onTap: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => WiFiConfigPage(),
+                    builder: (context) => const BleScanConnectView(),
                   ),
                 );
               },

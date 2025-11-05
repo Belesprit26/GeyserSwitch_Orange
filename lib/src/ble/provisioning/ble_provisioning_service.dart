@@ -8,6 +8,24 @@ class BleProvisioningService {
 
   BleProvisioningService({required this.bleRepo});
 
+  static void validateAsciiMax16(String value, {required String fieldName}) {
+    if (value.isEmpty) {
+      throw ArgumentError('$fieldName cannot be empty');
+    }
+    if (value.length > 16) {
+      throw ArgumentError('$fieldName must be 16 characters or fewer');
+    }
+    final isAscii = value.codeUnits.every((c) => c >= 0x20 && c <= 0x7E);
+    if (!isAscii) {
+      throw ArgumentError('$fieldName must contain only ASCII printable characters');
+    }
+  }
+
+  static void validateWifiCredentials({required String ssid, required String wifiPassword}) {
+    validateAsciiMax16(ssid, fieldName: 'SSID');
+    validateAsciiMax16(wifiPassword, fieldName: 'Wi‑Fi password');
+  }
+
   Future<void> connectAndSubscribe(String deviceId) async {
     await bleRepo.connect(deviceId: deviceId);
     await bleRepo.subscribeToNotifications();
@@ -28,6 +46,9 @@ class BleProvisioningService {
     String? userEmail,
     String? userPassword,
   }) async {
+    // Validate according to plan limits
+    validateWifiCredentials(ssid: ssid, wifiPassword: wifiPassword);
+    // Protocol commands will be wired when defined (SET_WIFI_CREDENTIALS)
     throw UnimplementedError('BLE provisioning protocol not wired yet');
   }
 

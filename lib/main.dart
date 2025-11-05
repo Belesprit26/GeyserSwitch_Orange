@@ -17,6 +17,7 @@ import 'package:gs_orange/src/timers/presentation/refactors/custom_timer_provide
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/bootstrap/app_bootstrap.dart';
+import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message)async{
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CustomTimerProvider()),
         ChangeNotifierProvider(create: (_) => ConnectionLinkProvider(),
         ),
+        ChangeNotifierProvider(create: (_) => ModeProvider()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
