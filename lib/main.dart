@@ -74,6 +74,8 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             AppBootstrap.postRun(context);
+            // Bind mode switching (Local vs Remote) to GeyserProvider
+            context.read<GeyserProvider>().bindMode(context);
           });
           // Add the MediaQuery to disable text scaling
           return MediaQuery(

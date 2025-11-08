@@ -26,5 +26,6 @@ import 'package:gs_orange/src/ble/data/datasources/ble_remote_data_source_impl.d
 import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 import 'package:gs_orange/src/ble/data/repos/ble_repo_impl.dart';
 import 'package:gs_orange/src/ble/provisioning/ble_provisioning_service.dart';
+import 'package:gs_orange/src/ble/presentation/services/ble_sync_service.dart';
 
 part 'injection_container.main.dart';

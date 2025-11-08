@@ -85,5 +85,6 @@ Future<void> _initBle() async {
     ..registerLazySingleton<BleRepo>(
       () => BleRepoImpl(dataSource: sl()),
     )
-    ..registerLazySingleton(() => BleProvisioningService(bleRepo: sl()));
+    ..registerLazySingleton(() => BleProvisioningService(bleRepo: sl()))
+    ..registerLazySingleton(() => BleSyncService(bleRepo: sl()));
 }

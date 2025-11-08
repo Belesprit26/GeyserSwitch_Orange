@@ -7,6 +7,7 @@ import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/ble/ble_uuids.dart';
 import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
+import 'package:gs_orange/src/ble/presentation/services/ble_sync_service.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -171,6 +172,8 @@ class _BleScanConnectViewState extends State<BleScanConnectView> {
       final ble = sl<BleRepo>();
       await ble.connect(deviceId: r.device.remoteId.str);
       await ble.subscribeToNotifications();
+      // Start BLE → Providers synchronization for Local Mode
+      sl<BleSyncService>().start(context);
       if (!mounted) return;
       context.read<ModeProvider>().setLocal();
       ScaffoldMessenger.of(context).showSnackBar(

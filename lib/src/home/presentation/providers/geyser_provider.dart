@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
+import 'package:provider/provider.dart';
+import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 
 class GeyserProvider with ChangeNotifier {
   bool isLoading = true;
@@ -19,8 +22,38 @@ class GeyserProvider with ChangeNotifier {
   // Track which geysers are currently being toggled (to prevent double-taps)
   final Set<String> _togglingGeysers = {};
 
+  // Firebase subscriptions so we can pause/resume in Local/Remote modes
+  StreamSubscription<DatabaseEvent>? _geysersListSub;
+  final Map<String, StreamSubscription<DatabaseEvent>?> _stateSubs = {};
+  final Map<String, StreamSubscription<DatabaseEvent>?> _sensorSubs = {};
+
+  // Mode binding
+  ModeProvider? _modeProvider;
+  VoidCallback? _modeListener;
+
   GeyserProvider() {
     _fetchGeysers();
+  }
+
+  /// Apply incoming values from Local Mode (BLE) to the first geyser, if present.
+  /// This is a minimal integration step; later we can make this entity selection-aware.
+  void updateFromLocal({bool? isOn, double? temperature, double? maxTemp}) {
+    if (geyserList.isEmpty) return;
+    final geyser = geyserList.first;
+    if (isOn != null) {
+      geyser.isOn = isOn;
+    }
+    if (temperature != null) {
+      geyser.temperature = temperature;
+    }
+    if (maxTemp != null) {
+      geyser.maxTemp = maxTemp;
+      // Notify listeners since maxTemp is a plain field
+      geyser.notifyListeners();
+    }
+    // Provider-level notify is not strictly necessary when entity notifies,
+    // but keep it to update list consumers if any.
+    notifyListeners();
   }
 
   // Method to fetch the list of geysers and listen to their state changes
@@ -28,7 +61,8 @@ class GeyserProvider with ChangeNotifier {
     final user = _firebaseAuth.currentUser!;
     final userGeysersRef = _firebaseDB.child(user.uid).child("Geysers");
 
-    userGeysersRef.onValue.listen((event) {
+    // Store the subscription so we can cancel it when switching to Local Mode
+    _geysersListSub = userGeysersRef.onValue.listen((event) {
       final geysersData = event.snapshot.value as Map<dynamic, dynamic>?;
 
       if (geysersData != null) {
@@ -63,10 +97,13 @@ class GeyserProvider with ChangeNotifier {
           }
 
           // Listen to state changes for each geyser
-          _listenToGeyserStateChanges(userGeysersRef.child(geyserId), geyser);
+          // Cancel previous state sub if present
+          _stateSubs[geyserId]?.cancel();
+          _stateSubs[geyserId] = _listenToGeyserStateChanges(userGeysersRef.child(geyserId), geyser);
 
           // Listen to sensor data changes for each geyser
-          _listenToGeyserSensorChanges(userGeysersRef.child(geyserId), geyser);
+          _sensorSubs[geyserId]?.cancel();
+          _sensorSubs[geyserId] = _listenToGeyserSensorChanges(userGeysersRef.child(geyserId), geyser);
         });
 
         // Sort the geyserList based on the geyser IDs
@@ -83,8 +120,8 @@ class GeyserProvider with ChangeNotifier {
   }
 
   // Method to listen to state changes for a specific geyser
-  void _listenToGeyserStateChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
-    geyserRef.child('state').onValue.listen((event) {
+  StreamSubscription<DatabaseEvent> _listenToGeyserStateChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
+    return geyserRef.child('state').onValue.listen((event) {
       final newState = event.snapshot.value as bool? ?? false;
       
       // RACE CONDITION MITIGATION:
@@ -112,8 +149,8 @@ class GeyserProvider with ChangeNotifier {
   }
 
   // Method to listen to sensor data changes for a specific geyser
-  void _listenToGeyserSensorChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
-    geyserRef.child(geyser.sensorKey).onValue.listen((event) {
+  StreamSubscription<DatabaseEvent> _listenToGeyserSensorChanges(DatabaseReference geyserRef, GeyserEntity geyser) {
+    return geyserRef.child(geyser.sensorKey).onValue.listen((event) {
       final value = event.snapshot.value;
       double newTemperature;
       
@@ -133,6 +170,47 @@ class GeyserProvider with ChangeNotifier {
       
       geyser.temperature = newTemperature;
     });
+  }
+
+  /// Explicitly start Firebase sync (Remote Mode).
+  Future<void> startFirebaseSync() async {
+    if (_geysersListSub != null) return;
+    _fetchGeysers();
+  }
+
+  /// Stop Firebase sync (Local Mode).
+  Future<void> stopFirebaseSync() async {
+    await _geysersListSub?.cancel();
+    _geysersListSub = null;
+    for (final sub in _stateSubs.values) {
+      await sub?.cancel();
+    }
+    for (final sub in _sensorSubs.values) {
+      await sub?.cancel();
+    }
+    _stateSubs.clear();
+    _sensorSubs.clear();
+  }
+
+  /// Bind to the mode provider to pause/resume Firebase listeners.
+  void bindMode(BuildContext context) {
+    if (_modeProvider != null) return;
+    _modeProvider = context.read<ModeProvider>();
+    _modeListener = () {
+      if (_modeProvider!.isLocal) {
+        stopFirebaseSync();
+      } else {
+        startFirebaseSync();
+      }
+    };
+    _modeProvider!.addListener(_modeListener!);
+
+    // Apply initial state
+    if (_modeProvider!.isLocal) {
+      stopFirebaseSync();
+    } else {
+      startFirebaseSync();
+    }
   }
 
   // Toggle the geyser state
@@ -179,6 +257,15 @@ class GeyserProvider with ChangeNotifier {
       // Always remove from toggling set
       _togglingGeysers.remove(geyser.id);
     }
+  }
+
+  @override
+  void dispose() {
+    _modeProvider?.removeListener(_modeListener ?? () {});
+    _modeListener = null;
+    _modeProvider = null;
+    stopFirebaseSync();
+    super.dispose();
   }
 }
 
