@@ -5,6 +5,9 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
+import 'package:provider/provider.dart';
+import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
+import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 
 import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 
@@ -44,8 +47,19 @@ class _TempSettingDialogState extends State<TempSettingDialog>
       });
 
     _animationController.forward();
-
-    _fetchMaxTemp();
+    // Decide initial source based on mode after the first frame (context available)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isLocal = context.read<ModeProvider>().isLocal;
+      if (isLocal) {
+        // Use local value (from entity) as initial, then device stream will confirm
+        setState(() {
+          _maxTemp = widget.geyser.maxTemp;
+          _updateAnimation(_maxTemp);
+        });
+      } else {
+        _fetchMaxTemp();
+      }
+    });
   }
 
   Future<void> _fetchMaxTemp() async {
@@ -184,20 +198,39 @@ class _TempSettingDialogState extends State<TempSettingDialog>
 
   // Update the temperature in Firebase and show feedback
   Future<void> _updateTemp(double maxTemp, String message) async {
-    if (_user == null) return;
-    try {
-      await _firebaseDB
-          .child(_user!.uid)
-          .child("Geysers")
-          .child(widget.geyser.id)
-          .update({
-        "max_temp": maxTemp,
-      });
-      CoreUtils.showSnackBar(context, message);
-    } catch (e) {
-      CoreUtils.showSnackBar(context, 'Failed to update temperature: $e');
-    } finally {
-      Navigator.pop(context, true);
+    final isLocal = context.read<ModeProvider>().isLocal;
+    if (isLocal) {
+      // Local Mode: push to device first using local value, then device stream confirms
+      try {
+        final ble = sl<BleRepo>();
+        await ble.setMaxTemp(maxTemp);
+        if (!mounted) return;
+        CoreUtils.showSnackBar(context, message);
+      } catch (e) {
+        if (!mounted) return;
+        CoreUtils.showSnackBar(context, 'Failed to update temperature: $e');
+      } finally {
+        if (mounted) Navigator.pop(context, true);
+      }
+    } else {
+      // Remote Mode: update Firebase
+      if (_user == null) return;
+      try {
+        await _firebaseDB
+            .child(_user!.uid)
+            .child("Geysers")
+            .child(widget.geyser.id)
+            .update({
+          "max_temp": maxTemp,
+        });
+        if (!mounted) return;
+        CoreUtils.showSnackBar(context, message);
+      } catch (e) {
+        if (!mounted) return;
+        CoreUtils.showSnackBar(context, 'Failed to update temperature: $e');
+      } finally {
+        if (mounted) Navigator.pop(context, true);
+      }
     }
   }
 }

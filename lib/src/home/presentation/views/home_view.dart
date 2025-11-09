@@ -9,6 +9,7 @@ import 'package:gs_orange/src/home/presentation/widgets/home_app_bar.dart';
 import 'package:gs_orange/src/timers/presentation/refactors/timers_providers/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:gs_orange/src/ble/presentation/widgets/mode_indicator.dart';
 
 import '../widgets/glowy_ui/glowy_borders.dart';
 
@@ -78,6 +79,8 @@ class _HomeViewState extends State<HomeView> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 33),
+                        const ModeIndicator(),
+                        const SizedBox(height: 12),
                         geyserCount == 1
                             ? buildSingleGeyserView(geysers[0])
                             : buildGeyserCarousel(geysers),

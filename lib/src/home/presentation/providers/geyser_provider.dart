@@ -28,9 +28,10 @@ class GeyserProvider with ChangeNotifier {
   final Map<String, StreamSubscription<DatabaseEvent>?> _stateSubs = {};
   final Map<String, StreamSubscription<DatabaseEvent>?> _sensorSubs = {};
 
-  // Mode binding
-  ModeProvider? _modeProvider;
+  // Mode binding (non-null once bound)
+  late ModeProvider _modeProvider;
   VoidCallback? _modeListener;
+  bool _modeBound = false;
 
   GeyserProvider() {
     _fetchGeysers();
@@ -195,19 +196,20 @@ class GeyserProvider with ChangeNotifier {
 
   /// Bind to the mode provider to pause/resume Firebase listeners.
   void bindMode(BuildContext context) {
-    if (_modeProvider != null) return;
+    if (_modeBound) return;
     _modeProvider = context.read<ModeProvider>();
+    _modeBound = true;
     _modeListener = () {
-      if (_modeProvider!.isLocal) {
+      if (_modeProvider.isLocal) {
         stopFirebaseSync();
       } else {
         startFirebaseSync();
       }
     };
-    _modeProvider!.addListener(_modeListener!);
+    _modeProvider.addListener(_modeListener!);
 
     // Apply initial state
-    if (_modeProvider!.isLocal) {
+    if (_modeProvider.isLocal) {
       stopFirebaseSync();
     } else {
       startFirebaseSync();
@@ -233,7 +235,7 @@ class GeyserProvider with ChangeNotifier {
       notifyListeners();
 
       // Route based on mode
-      if (_modeProvider != null && _modeProvider!.isLocal) {
+      if (_modeBound && _modeProvider.isLocal) {
         // Local Mode: send toggle over BLE
         final ble = sl<BleRepo>();
         await ble.sendToggle(newState);
@@ -266,9 +268,11 @@ class GeyserProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    _modeProvider?.removeListener(_modeListener ?? () {});
-    _modeListener = null;
-    _modeProvider = null;
+    if (_modeBound) {
+      _modeProvider.removeListener(_modeListener ?? () {});
+      _modeListener = null;
+      _modeBound = false;
+    }
     stopFirebaseSync();
     super.dispose();
   }
