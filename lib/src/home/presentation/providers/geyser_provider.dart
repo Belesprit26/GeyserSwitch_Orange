@@ -6,6 +6,7 @@ import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/home/domain/entities/geyser_entity.dart';
 import 'package:provider/provider.dart';
 import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
+import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 
 class GeyserProvider with ChangeNotifier {
   bool isLoading = true;
@@ -220,31 +221,35 @@ class GeyserProvider with ChangeNotifier {
       return; // Already toggling this geyser
     }
 
-    final user = _firebaseAuth.currentUser!;
     final previousState = geyser.isOn;
     final newState = !previousState;
 
     try {
       // Mark as toggling
       _togglingGeysers.add(geyser.id);
-      
-      // Track pending update to prevent race conditions
-      _pendingStateUpdates[geyser.id] = newState;
-      
+
       // Optimistic update - update UI immediately
       geyser.isOn = newState;
       notifyListeners();
 
-      // Write to Firebase
-      await _firebaseDB
-          .child(user.uid)
-          .child("Geysers")
-          .child(geyser.id)
-          .update({"state": newState});
-
-      // Success - pending update will be cleared by listener when it receives confirmation
-      // Return success (no error rollback needed since listener will handle it)
-      
+      // Route based on mode
+      if (_modeProvider != null && _modeProvider!.isLocal) {
+        // Local Mode: send toggle over BLE
+        final ble = sl<BleRepo>();
+        await ble.sendToggle(newState);
+        // BleSyncService/state stream will confirm actual state
+      } else {
+        // Remote Mode: write to Firebase
+        final user = _firebaseAuth.currentUser!;
+        // Track pending update to prevent race conditions against Firebase listener
+        _pendingStateUpdates[geyser.id] = newState;
+        await _firebaseDB
+            .child(user.uid)
+            .child("Geysers")
+            .child(geyser.id)
+            .update({"state": newState});
+        // Pending cleared when listener observes the same new state
+      }
     } catch (error) {
       // ERROR ROLLBACK: Revert optimistic update
       geyser.isOn = previousState;
