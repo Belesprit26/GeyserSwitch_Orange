@@ -6,11 +6,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 import 'package:gs_orange/bootstrap/device_info_service.dart';
 import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/core/utils/last_updated_store.dart';
+import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
+import 'package:gs_orange/src/ble/presentation/services/ble_sync_service.dart';
+import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 
 /// Central place to initialize app-wide bootstrapped services.
 ///
@@ -79,6 +84,23 @@ class AppBootstrap {
 
     // Log app open
     await _analytics.logAppOpen();
+
+    // Attempt BLE auto-reconnect if a device was previously paired
+    try {
+      final prefs = sl<SharedPreferences>();
+      final lastId = prefs.getString('last_ble_device_id');
+      if (lastId != null && lastId.isNotEmpty) {
+        final ble = sl<BleRepo>();
+        await ble.connect(deviceId: lastId);
+        await ble.subscribeToNotifications();
+        sl<BleSyncService>().start(context);
+        if (context.mounted) {
+          context.read<ModeProvider>().setLocal();
+        }
+      }
+    } catch (_) {
+      // Ignore auto-reconnect failures
+    }
 
     // Upsert device info now and on login changes (max once per 7 days)
     final deviceInfoService = DeviceInfoService();

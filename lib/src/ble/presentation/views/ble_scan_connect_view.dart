@@ -12,6 +12,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BleScanConnectView extends StatefulWidget {
   const BleScanConnectView({super.key});
@@ -172,6 +173,9 @@ class _BleScanConnectViewState extends State<BleScanConnectView> {
       final ble = sl<BleRepo>();
       await ble.connect(deviceId: r.device.remoteId.str);
       await ble.subscribeToNotifications();
+      // Persist last connected device for auto-reconnect
+      final prefs = sl<SharedPreferences>();
+      await prefs.setString('last_ble_device_id', r.device.remoteId.str);
       // Start BLE → Providers synchronization for Local Mode
       sl<BleSyncService>().start(context);
       if (!mounted) return;

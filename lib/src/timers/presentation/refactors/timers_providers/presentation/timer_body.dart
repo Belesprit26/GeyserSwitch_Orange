@@ -29,7 +29,7 @@ class TimersBody1 extends StatelessWidget {
 
             // 04:00 Timer
             buildTimerSwitch(context, "04:00", provider.is4AM, () async {
-              await provider.toggleTimer("04:00", provider.is4AM);
+              await provider.toggleTimer(context, "04:00", provider.is4AM);
               CoreUtils.showSnackBar(context, provider.is4AM
                   ? 'Your 4AM Timer has been turned ON Successfully.'
                   : 'Your 4AM Timer has been turned OFF Successfully.');
@@ -39,7 +39,7 @@ class TimersBody1 extends StatelessWidget {
 
             // 06:00 Timer
             buildTimerSwitch(context, "06:00", provider.is6AM, () async {
-              await provider.toggleTimer("06:00", provider.is6AM);
+              await provider.toggleTimer(context, "06:00", provider.is6AM);
               CoreUtils.showSnackBar(context, provider.is6AM
                   ? 'Your 6AM Timer has been turned ON Successfully.'
                   : 'Your 6AM Timer has been turned OFF Successfully.');
@@ -49,7 +49,7 @@ class TimersBody1 extends StatelessWidget {
 
             // 08:00 Timer
             buildTimerSwitch(context, "08:00", provider.is8AM, () async {
-              await provider.toggleTimer("08:00", provider.is8AM);
+              await provider.toggleTimer(context, "08:00", provider.is8AM);
               CoreUtils.showSnackBar(context, provider.is8AM
                   ? 'Your 8AM Timer has been turned ON Successfully.'
                   : 'Your 8AM Timer has been turned OFF Successfully.');
@@ -69,7 +69,7 @@ class TimersBody1 extends StatelessWidget {
 
             // 16:00 Timer
             buildTimerSwitch(context, "16:00", provider.is4PM, () async {
-              await provider.toggleTimer("16:00", provider.is4PM);
+              await provider.toggleTimer(context, "16:00", provider.is4PM);
               CoreUtils.showSnackBar(context, provider.is4PM
                   ? 'Your 4PM Timer has been turned ON Successfully.'
                   : 'Your 4PM Timer has been turned OFF Successfully.');
@@ -79,7 +79,7 @@ class TimersBody1 extends StatelessWidget {
 
             // 18:00 Timer
             buildTimerSwitch(context, "18:00", provider.is6PM, () async {
-              await provider.toggleTimer("18:00", provider.is6PM);
+              await provider.toggleTimer(context, "18:00", provider.is6PM);
               CoreUtils.showSnackBar(context, provider.is6PM
                   ? 'Your 6PM Timer has been turned ON Successfully.'
                   : 'Your 6PM Timer has been turned OFF Successfully.');
