@@ -5,6 +5,7 @@ import 'package:gs_orange/src/ble/domain/events/ble_events.dart';
 import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 import 'package:gs_orange/src/home/presentation/providers/geyser_provider.dart';
+import 'package:gs_orange/core/services/push_notifications/notification_service.dart';
 
 /// Listens to BLE streams and synchronizes them into app providers while
 /// Local Mode is active. Keep this lightweight and presentation-friendly.
@@ -21,6 +22,8 @@ class BleSyncService {
 
   bool _started = false;
   BuildContext? _context;
+  DateTime? _lastAlertShownAt;
+  static const Duration _alertCooldown = Duration(seconds: 30);
 
   /// Begin syncing BLE → Providers. Safe to call multiple times.
   void start(BuildContext context) {
@@ -61,8 +64,22 @@ class BleSyncService {
 
     _alertSub = _bleRepo.alert$.listen((evt) {
       // Step 1: Capture event only. In a later step we'll route this to notifications.
-      // final c = _context; if (c == null) return;
-      // TODO: Hook NotificationService for max-temp alerts.
+      final c = _context;
+      if (c == null) return;
+      final mode = c.read<ModeProvider>();
+      if (!mode.isLocal) return;
+      if (!evt.triggered) return;
+      final now = DateTime.now();
+      if (_lastAlertShownAt != null &&
+          now.difference(_lastAlertShownAt!) < _alertCooldown) {
+        return;
+      }
+      _lastAlertShownAt = now;
+      final temp = evt.tempC.toStringAsFixed(1);
+      NotificationService().showLocal(
+        title: 'Max temperature reached',
+        body: 'Current geyser temperature: $temp°C',
+      );
     });
 
     _hbSub = _bleRepo.heartbeat$.listen((_) {

@@ -217,6 +217,31 @@ class NotificationService {
     }
   }
 
+  /// Show a simple local notification (no FCM RemoteMessage needed).
+  Future<void> showLocal({
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'high_importance_channel',
+      'High Importance Notifications',
+      channelDescription: 'This channel is used for important notifications.',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+    );
+    await _flutterLocalNotificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title,
+      body,
+      notificationDetails,
+      payload: 'local_alert',
+    );
+  }
+
   // Create the high importance channel on Android (O+)
   Future<void> _ensureAndroidHighImportanceChannel() async {
     if (!Platform.isAndroid) return;
