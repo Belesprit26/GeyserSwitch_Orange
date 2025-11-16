@@ -6,6 +6,7 @@ import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 import 'package:gs_orange/src/ble/presentation/services/ble_sync_service.dart';
+import 'package:gs_orange/src/ble/presentation/services/ble_background_service.dart';
 
 class ModeIndicator extends StatefulWidget {
   const ModeIndicator({super.key});
@@ -109,6 +110,7 @@ class _ModeIndicatorState extends State<ModeIndicator> {
                             await ble.connect(deviceId: lastId);
                             await ble.subscribeToNotifications();
                             sl<BleSyncService>().start(context);
+                            await BleBackgroundService.instance.start();
                             if (mounted) {
                               context.read<ModeProvider>().setLocal();
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -143,6 +145,7 @@ class _ModeIndicatorState extends State<ModeIndicator> {
                           try {
                             // Stop BLE sync and disconnect
                             await sl<BleSyncService>().stop();
+                            await BleBackgroundService.instance.stop();
                             final ble = sl<BleRepo>();
                             await ble.disconnect();
                             if (mounted) {
