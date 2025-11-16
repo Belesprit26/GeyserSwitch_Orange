@@ -72,7 +72,7 @@ class CustomTimer extends StatelessWidget {
                         );
                         if (picked != null) {
                           final formattedTime = _formatTime(picked);
-                          await provider.updateCustomTime(formattedTime);
+                          await provider.updateCustomTime(context, formattedTime);
                         }
                       },
                       child: Text(
@@ -99,7 +99,7 @@ class CustomTimer extends StatelessWidget {
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () async {
-                            await provider.toggleCustomTimer();
+                            await provider.toggleCustomTimer(context);
                             CoreUtils.showSnackBar(
                               context,
                               provider.isCustom
