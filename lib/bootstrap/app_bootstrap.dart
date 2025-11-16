@@ -15,6 +15,7 @@ import 'package:gs_orange/core/services/injection_container_exports.dart';
 import 'package:gs_orange/core/utils/last_updated_store.dart';
 import 'package:gs_orange/src/ble/domain/repos/ble_repo.dart';
 import 'package:gs_orange/src/ble/presentation/services/ble_sync_service.dart';
+import 'package:gs_orange/src/ble/presentation/services/ble_background_service.dart';
 import 'package:gs_orange/src/ble/presentation/providers/mode_provider.dart';
 
 /// Central place to initialize app-wide bootstrapped services.
@@ -82,6 +83,9 @@ class AppBootstrap {
     notificationService.firebaseInit(context);
     await notificationService.resetIOSBadge();
 
+    // Initialize BLE background service (Android foreground service, iOS watchdog)
+    await BleBackgroundService.instance.initialize();
+
     // Log app open
     await _analytics.logAppOpen();
 
@@ -94,6 +98,7 @@ class AppBootstrap {
         await ble.connect(deviceId: lastId);
         await ble.subscribeToNotifications();
         sl<BleSyncService>().start(context);
+        await BleBackgroundService.instance.start();
         if (context.mounted) {
           context.read<ModeProvider>().setLocal();
         }
