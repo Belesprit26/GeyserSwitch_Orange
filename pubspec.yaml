@@ -32,6 +32,7 @@ dependencies:
   syncfusion_flutter_gauges: ^27.1.56
   app_settings: ^5.1.1
   widgets_easier: ^0.0.10
+  flutter_background_service: ^5.0.5
 
   bloc: ^8.1.2
   chewie: ^1.7.0
