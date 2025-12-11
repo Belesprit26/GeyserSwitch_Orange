@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:gs_orange/core/common/widgets/nested_back_button.dart';
 import 'package:gs_orange/core/enums/update_user.dart';
 import 'package:gs_orange/core/extensions/context_extension.dart';
