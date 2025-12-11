@@ -127,9 +127,9 @@ class _TempSettingDialogState extends State<TempSettingDialog>
                       endWidth: 20,
                       gradient: SweepGradient(
                         colors: <Color>[
-                          Colours.primaryOrange.withOpacity(0.8),
-                          Colors.orange.withOpacity(0.6),
-                          Colors.redAccent.withOpacity(0.6),
+                          Colours.primaryOrange.withValues(alpha:0.8),
+                          Colors.orange.withValues(alpha:0.6),
+                          Colors.redAccent.withValues(alpha:0.6),
                         ],
                         stops: const <double>[0.3, 0.6, 1.0],
                       ),
@@ -150,7 +150,7 @@ class _TempSettingDialogState extends State<TempSettingDialog>
               ],
             ),
             Slider(
-              activeColor: Colours.primaryOrange.withOpacity(0.9),
+              activeColor: Colours.primaryOrange.withValues(alpha:0.9),
               value: _maxTemp,
               min: 0,
               max: maxTemperatureLimit, // Adjusted maximum

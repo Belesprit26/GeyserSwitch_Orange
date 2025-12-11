@@ -38,9 +38,9 @@ class CustomTimer extends StatelessWidget {
                 gradient: provider.isCustom
                     ? LinearGradient(
                   colors: [
-                    Colours.primaryOrange.withOpacity(0.99),
-                    Colors.blueAccent.withOpacity(0.6),
-                    Colors.redAccent.withOpacity(0.7),
+                    Colours.primaryOrange.withValues(alpha:0.99),
+                    Colors.blueAccent.withValues(alpha:0.6),
+                    Colors.redAccent.withValues(alpha:0.7),
                   ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
@@ -50,7 +50,7 @@ class CustomTimer extends StatelessWidget {
                 border: Border.all(color: Colors.white, width: 1), // Thin white border
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.shade400.withOpacity(0.7),
+                    color: Colors.grey.shade400.withValues(alpha:0.7),
                     spreadRadius: 2,
                     blurRadius: 10,
                   ),
@@ -114,14 +114,14 @@ class CustomTimer extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               color: provider.isCustom
-                                  ? Colors.black.withOpacity(0.5)
+                                  ? Colors.black.withValues(alpha:0.5)
                                   : Colours.secondaryColour,
                               border: Border.all(color: Colors.white, width: 2),
                               boxShadow: [
                                 BoxShadow(
                                   color: provider.isCustom
-                                      ? Colours.primaryOrange.withOpacity(0.2)
-                                      : Colors.grey.shade400.withOpacity(0.7),
+                                      ? Colours.primaryOrange.withValues(alpha:0.2)
+                                      : Colors.grey.shade400.withValues(alpha:0.7),
                                   spreadRadius: 2,
                                   blurRadius: provider.isCustom ? 10 : 2,
                                 ),
@@ -157,7 +157,7 @@ class CustomTimer extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * .93,
                 height: MediaQuery.of(context).size.height * .07,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5), // Semi-transparent overlay
+                  color: Colors.black.withValues(alpha:0.5), // Semi-transparent overlay
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: const Center(

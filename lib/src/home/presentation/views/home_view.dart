@@ -155,9 +155,9 @@ class _HomeViewState extends State<HomeView> {
               borderSize: 2,
               glowSize: 5,
               gradientColors: [
-                geyser.temperature >=  45 ? Colors.red.withOpacity(0.2) : Colors.blueAccent.withOpacity(0.2),
-                Colors.black54.withOpacity(0.3),
-                Colors.black87.withOpacity(0.3),
+                geyser.temperature >=  45 ? Colors.red.withValues(alpha:0.2) : Colors.blueAccent.withValues(alpha:0.2),
+                Colors.black54.withValues(alpha:0.3),
+                Colors.black87.withValues(alpha:0.3),
               ],
               borderRadius: BorderRadius.all(Radius.circular(20)),
               child: Container(
@@ -195,16 +195,16 @@ class _HomeViewState extends State<HomeView> {
                   boxShadow: [
                     BoxShadow(
                       color: geyser.temperature >= 50 ?
-                      Colors.redAccent.withOpacity(0.6) :
+                      Colors.redAccent.withValues(alpha:0.6) :
                       geyser.temperature <= 40 ?
-                      Colors.blueAccent.withOpacity(0.6) :
-                      Colors.deepOrangeAccent.withOpacity(0.6),
+                      Colors.blueAccent.withValues(alpha:0.6) :
+                      Colors.deepOrangeAccent.withValues(alpha:0.6),
                       blurRadius: 10.0,
                       blurStyle: BlurStyle.outer
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.black87.withOpacity(0.3),
+                    color: Colors.black87.withValues(alpha:0.3),
                     width: 2,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -260,7 +260,7 @@ class _HomeViewState extends State<HomeView> {
           controller: _pageController,
           count: geysers.length,
           effect: ExpandingDotsEffect(
-            activeDotColor: Colors.black.withOpacity(0.6),
+            activeDotColor: Colors.black.withValues(alpha:0.6),
             dotHeight: 8,
             dotWidth: 8,
             spacing: 9,

@@ -13,9 +13,9 @@ Widget buildTimerSwitch(BuildContext context, String time, bool isOn, Function t
           gradient: isOn
               ? LinearGradient(
             colors: [
-              Colours.primaryOrange.withOpacity(0.99),
-              Colors.blueAccent.withOpacity(0.6),
-              Colors.redAccent.withOpacity(0.7),
+              Colours.primaryOrange.withValues(alpha:0.99),
+              Colors.blueAccent.withValues(alpha:0.6),
+              Colors.redAccent.withValues(alpha:0.7),
             ],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
@@ -25,7 +25,7 @@ Widget buildTimerSwitch(BuildContext context, String time, bool isOn, Function t
           border: Border.all(color: Colors.white, width: 1), // Thin white border
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.shade400.withOpacity(0.7),
+              color: Colors.grey.shade400.withValues(alpha:0.7),
               spreadRadius: 2,
               blurRadius: 10,
             ),
@@ -56,14 +56,14 @@ Widget buildTimerSwitch(BuildContext context, String time, bool isOn, Function t
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: isOn
-                        ? Colors.black.withOpacity(0.5)
+                        ? Colors.black.withValues(alpha:0.5)
                         : Colours.secondaryColour,
                     border: Border.all(color: Colors.white, width: 2),
                     boxShadow: [
                       BoxShadow(
                         color: isOn
-                            ? Colours.primaryOrange.withOpacity(0.2)
-                            : Colors.grey.shade400.withOpacity(0.7),
+                            ? Colours.primaryOrange.withValues(alpha:0.2)
+                            : Colors.grey.shade400.withValues(alpha:0.7),
                         spreadRadius: 2,
                         blurRadius: isOn ? 10 : 2,
                       ),
@@ -97,7 +97,7 @@ Widget buildTimerSwitch(BuildContext context, String time, bool isOn, Function t
           child: Container(
             decoration:  BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-            color: Colors.black.withOpacity(0.5), ),
+            color: Colors.black.withValues(alpha:0.5), ),
             child: const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,

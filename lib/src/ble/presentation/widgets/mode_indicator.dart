@@ -202,7 +202,7 @@ class _Segment extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: active ? activeColor.withOpacity(0.15) : Colors.grey.shade200,
+          color: active ? activeColor.withValues(alpha:0.15) : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: active ? activeColor : Colors.grey.shade400),
         ),

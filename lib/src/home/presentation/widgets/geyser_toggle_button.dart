@@ -69,14 +69,14 @@ class _GeyserToggleButtonState extends State<GeyserToggleButton> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 color: geyser.isOn
-                    ? Colours.primaryOrange.withOpacity(.5)
+                    ? Colours.primaryOrange.withValues(alpha:.5)
                     : Colours.secondaryColour,
                 border: Border.all(color: Colors.white, width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: geyser.isOn
-                        ? Colours.primaryOrange.withOpacity(.2)
-                        : Colors.grey.shade400.withOpacity(0.3),
+                        ? Colours.primaryOrange.withValues(alpha:.2)
+                        : Colors.grey.shade400.withValues(alpha:0.3),
                     spreadRadius: 2,
                     blurRadius: geyser.isOn ? 10 : 3,
                   ),
